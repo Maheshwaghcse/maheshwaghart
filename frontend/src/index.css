@@ -1,0 +1,317 @@
+/* ====================================================
+   ETHEREAL OBSIDIAN — Design System (Stitch Project)
+   Project: Luxury Art Portfolio Redesign #9979136639718337662
+   ==================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;900&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* ─── TOKENS ─── */
+:root {
+  /* Brand Colors */
+  --primary:            #ecb2ff;
+  --primary-container:  #bd00ff;
+  --on-primary:         #520071;
+  --on-primary-container: #ffffff;
+
+  --secondary:          #ffaedd;
+  --secondary-container:#ff36c8;
+  --on-secondary:       #600049;
+
+  --tertiary:           #ffb961;
+  --tertiary-container: #a66800;
+  --on-tertiary:        #472a00;
+
+  /* Surfaces */
+  --surface:                  #19101c;
+  --surface-dim:              #19101c;
+  --surface-bright:           #403643;
+  --surface-container-lowest: #130b16;
+  --surface-container-low:    #211824;
+  --surface-container:        #261c28;
+  --surface-container-high:   #302733;
+  --surface-container-highest:#3c313e;
+  --surface-variant:          #3c313e;
+
+  /* Text */
+  --on-surface:         #eeddee;
+  --on-surface-variant: #d4c0d7;
+
+  /* Borders */
+  --outline:            #9d8ba0;
+  --outline-variant:    #514255;
+
+  /* Errors */
+  --error:              #ffb4ab;
+  --error-container:    #93000a;
+  --on-error:           #690005;
+
+  /* ── Semantic aliases (backwards compat) ── */
+  --primary-color:    var(--primary-container);  /* #bd00ff */
+  --secondary-color:  var(--secondary-container); /* #ff36c8 */
+  --accent-color:     var(--tertiary);             /* #ffb961 */
+  --primary-gradient: linear-gradient(135deg, #bd00ff 0%, #ff36c8 100%);
+
+  --bg-black:     var(--surface);                 /* #19101c */
+  --bg-card:      var(--surface-container);       /* #261c28 */
+  --text-white:   var(--on-surface);              /* #eeddee */
+  --text-muted:   var(--outline);                 /* #9d8ba0 */
+  --border-color: var(--outline-variant);         /* #514255 */
+
+  --glass-bg:     rgba(38, 28, 40, 0.70);
+  --glass-border: rgba(212, 192, 215, 0.12);
+  --hero-overlay: linear-gradient(180deg, rgba(25,16,28,0.55) 0%, rgba(25,16,28,0.85) 100%);
+  --bg-brightness: 0.45;
+
+  /* ── Typography scale ── */
+  --font-display: clamp(3rem, 10vw, 6rem);
+  --font-xxl:     clamp(2.5rem, 8vw, 4.5rem);
+  --font-xl:      clamp(2rem, 6vw, 3rem);
+  --font-lg:      clamp(1.25rem, 4vw, 2rem);
+  --font-md:      clamp(1rem, 2.5vw, 1.125rem);
+  --font-sm:      clamp(0.875rem, 2vw, 1rem);
+  --font-xs:      0.75rem;
+
+  /* ── Spacing (8px unit) ── */
+  --space-1: 0.5rem;   /* 8px */
+  --space-2: 1rem;     /* 16px */
+  --space-3: 1.5rem;   /* 24px */
+  --space-4: 2rem;     /* 32px */
+  --space-6: 3rem;     /* 48px */
+  --space-8: 4rem;     /* 64px */
+  --space-16: 8rem;    /* 128px — section gap */
+
+  --spacing-xs: var(--space-1);
+  --spacing-sm: var(--space-2);
+  --spacing-md: var(--space-3);
+  --spacing-lg: var(--space-4);
+  --spacing-xl: var(--space-8);
+
+  /* ── Radii ── */
+  --radius-sm:   0.25rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   1rem;
+  --radius-xl:   1.5rem;
+  --radius-2xl:  2rem;
+  --radius-full: 9999px;
+}
+
+/* ─── BASE RESET ─── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.4s ease;
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Epilogue', sans-serif;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--on-surface);
+}
+
+h1 { font-size: var(--font-display); font-weight: 900; letter-spacing: -0.02em; }
+h2 { font-size: var(--font-xl);      font-weight: 700;  letter-spacing: 0.05em; text-transform: uppercase; }
+h3 { font-size: var(--font-lg);      font-weight: 600;  letter-spacing: 0.03em; }
+
+p {
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--font-md);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  color: var(--on-surface-variant);
+}
+
+/* ─── CONTAINER ─── */
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+}
+
+@media (max-width: 1024px) { .container { padding: 0 var(--space-4); } }
+@media (max-width: 768px)  { .container { padding: 0 var(--space-3); } }
+@media (max-width: 480px)  { .container { padding: 0 var(--space-2); } }
+
+/* ─── UTILITY ─── */
+.text-gradient {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--primary-container);
+  display: inline-block;
+}
+
+.text-primary { color: var(--primary); }
+
+.hollow-text {
+  -webkit-text-stroke: 1.5px var(--outline);
+  color: transparent;
+}
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-full);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: var(--font-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  border: none;
+  min-height: 48px;
+  position: relative;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--primary-gradient);
+  color: #fff;
+  box-shadow: 0 0 30px rgba(189, 0, 255, 0.25);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 40px rgba(189, 0, 255, 0.45);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--on-surface);
+  border: 1px solid var(--outline-variant);
+}
+.btn-outline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 20px rgba(189, 0, 255, 0.15);
+}
+
+/* ─── GLASS SURFACE ─── */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+}
+
+/* ─── FORMS ─── */
+input, textarea, select {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  color: var(--on-surface);
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--font-md);
+  transition: all 0.3s ease;
+  min-height: 48px;
+  outline: none;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary-container);
+  box-shadow: 0 0 0 3px rgba(189, 0, 255, 0.15),
+              0 1px 0 0 var(--primary-container) inset;
+}
+
+/* ─── SECTION HEADER ─── */
+.section-header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+.section-badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: rgba(189, 0, 255, 0.12);
+  color: var(--primary);
+  border-radius: var(--radius-full);
+  font-family: 'Manrope', sans-serif;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+  border: 1px solid rgba(189, 0, 255, 0.25);
+}
+
+/* ─── REVEAL ANIMATION ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── SPINNER ─── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid rgba(189, 0, 255, 0.2);
+  border-top-color: var(--primary-container);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto var(--space-2);
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--surface-container-lowest); }
+::-webkit-scrollbar-thumb { background: var(--primary-container); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--secondary-container); }
+
+/* ─── LIGHT THEME (if toggled) ─── */
+[data-theme='light'] {
+  --surface:                  #fdf7ff;
+  --surface-container:        #f5edf8;
+  --surface-container-high:   #efe7f3;
+  --on-surface:               #19101c;
+  --on-surface-variant:       #3c313e;
+  --outline:                  #6d5d71;
+  --outline-variant:          #d4c0d7;
+  --glass-bg:                 rgba(253, 247, 255, 0.80);
+  --glass-border:             rgba(60, 49, 62, 0.12);
+  --hero-overlay:             linear-gradient(180deg, rgba(253,247,255,0.4) 0%, rgba(253,247,255,0.75) 100%);
+  --bg-brightness: 0.9;
+  --bg-black: var(--surface);
+  --bg-card:  var(--surface-container);
+  --text-white: var(--on-surface);
+  --text-muted: var(--outline);
+  --border-color: var(--outline-variant);
+}
+
+/* ─── RESPONSIVE BREAKPOINTS ─── */
+@media (max-width: 1440px) { h1 { font-size: clamp(2.5rem, 9vw, 5rem); } }
+@media (max-width: 1024px) { h1 { font-size: clamp(2rem, 8vw, 4rem); }   h2 { font-size: clamp(1.5rem, 5vw, 2.5rem); } }
+@media (max-width: 768px)  { h1 { font-size: clamp(1.75rem, 7vw, 3rem); } }
+@media (max-width: 480px)  { html { font-size: 15px; } }
+@media (max-width: 320px)  { html { font-size: 14px; } }
