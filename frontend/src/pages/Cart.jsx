@@ -13,11 +13,7 @@ const Cart = () => {
   const totalPrice = getCartTotal ? getCartTotal().toFixed(2) : cartItems.reduce((acc, item) => acc + item.price, 0).toFixed(2);
 
   const checkoutHandler = () => {
-    if (!userInfo) {
-      navigate('/login?redirect=checkout');
-    } else {
-      navigate('/checkout');
-    }
+    navigate('/checkout');
   };
 
   if (cartItems.length === 0) {

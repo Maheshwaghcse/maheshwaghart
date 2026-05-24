@@ -8,7 +8,7 @@ const Home = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   const [gridLimit] = useState(9);
-  
+
   const dragStart = useRef({ x: 0, y: 0 });
   const dragOffsetRef = useRef({ x: 0, y: 0 });
   const isDragging = useRef(false);
@@ -25,12 +25,12 @@ const Home = () => {
   const handleDragStart = (e) => {
     if (isSwiping || loading || sketches.length === 0) return;
     if (e.target.closest('.slider-btn') || e.target.closest('.indicator-dot')) return;
-    
+
     isDragging.current = true;
     const coords = getEventCoordinates(e);
     dragStart.current = { x: coords.x, y: coords.y };
     dragOffsetRef.current = { x: 0, y: 0 };
-    
+
     if (deckContainerRef.current) {
       deckContainerRef.current.style.transition = 'none';
       deckContainerRef.current.classList.add('grabbing');
@@ -39,7 +39,7 @@ const Home = () => {
 
   const handleDragMove = (e) => {
     if (!isDragging.current || isSwiping || sketches.length === 0) return;
-    
+
     const coords = getEventCoordinates(e);
     const offsetX = coords.x - dragStart.current.x;
     const offsetY = coords.y - dragStart.current.y;
@@ -77,10 +77,10 @@ const Home = () => {
 
     if (Math.abs(offsetX) > threshold) {
       setIsSwiping(true);
-      const nextIndex = offsetX < 0 
+      const nextIndex = offsetX < 0
         ? (activeIndex + 1) % sketches.length
         : (activeIndex - 1 + sketches.length) % sketches.length;
-      
+
       if (deckContainerRef.current) {
         deckContainerRef.current.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
         deckContainerRef.current.style.transform = 'translate3d(0px, 0px, 0px)';
@@ -105,7 +105,7 @@ const Home = () => {
         }
       }, 300); // Snappy 300ms transition
     }
-    
+
     setTimeout(() => {
       dragOffsetRef.current = { x: 0, y: 0 };
     }, 50);
@@ -134,7 +134,7 @@ const Home = () => {
         const coords = getEventCoordinates(e);
         const diffX = Math.abs(coords.x - dragStart.current.x);
         const diffY = Math.abs(coords.y - dragStart.current.y);
-        
+
         // Prevent default browser touch scrolling only if swipe is horizontal
         if (diffX > diffY && e.cancelable) {
           e.preventDefault();
@@ -161,11 +161,11 @@ const Home = () => {
   const handlePrev = () => {
     if (isSwiping || sketches.length === 0) return;
     setIsSwiping(true);
-    
+
     if (deckContainerRef.current) {
       deckContainerRef.current.style.transition = 'none';
       deckContainerRef.current.style.transform = 'translate3d(-100px, 0px, 0px)';
-      
+
       // Schedule the slide transition in the next paint cycle completely layout-thrash-free
       requestAnimationFrame(() => {
         if (deckContainerRef.current) {
@@ -187,11 +187,11 @@ const Home = () => {
   const handleNext = () => {
     if (isSwiping || sketches.length === 0) return;
     setIsSwiping(true);
-    
+
     if (deckContainerRef.current) {
       deckContainerRef.current.style.transition = 'none';
       deckContainerRef.current.style.transform = 'translate3d(100px, 0px, 0px)';
-      
+
       // Schedule the slide transition in the next paint cycle completely layout-thrash-free
       requestAnimationFrame(() => {
         if (deckContainerRef.current) {
@@ -213,12 +213,12 @@ const Home = () => {
   const handleDotClick = (idx) => {
     if (isSwiping || idx === activeIndex || sketches.length === 0) return;
     setIsSwiping(true);
-    
+
     if (deckContainerRef.current) {
       deckContainerRef.current.style.transition = 'transform 0.3s ease';
       deckContainerRef.current.style.transform = 'scale(0.95)';
     }
-    
+
     setTimeout(() => {
       setActiveIndex(idx);
       setIsSwiping(false);
@@ -231,7 +231,7 @@ const Home = () => {
 
   const handleCardClick = (index, e) => {
     const totalDragDist = Math.hypot(dragOffsetRef.current.x, dragOffsetRef.current.y);
-    
+
     if (index !== activeIndex) {
       e.preventDefault();
       if (isSwiping) return;
@@ -246,19 +246,19 @@ const Home = () => {
 
   const getCardStyle = (idx) => {
     if (sketches.length === 0) return {};
-    
+
     let diff = idx - activeIndex;
     const half = Math.floor(sketches.length / 2);
-    
+
     if (diff > half) {
       diff -= sketches.length;
     } else if (diff < -half) {
       diff += sketches.length;
     }
-    
+
     const absDiff = Math.abs(diff);
     const isVisible = absDiff <= 3;
-    
+
     const zIndex = 10 - absDiff;
     const scale = diff === 0 ? 1.15 : 0.9;
     const opacity = diff === 0 ? 1.0 : (isVisible ? 0.6 : 0);
@@ -275,53 +275,72 @@ const Home = () => {
   // Real Instagram Data - You can update this with your actual post links and images
   const realInstaData = [
     {
-      img: "/uploads/image-1779093011164.jpg",
-      link: "https://www.instagram.com/p/DQWpx0bDOen/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
-      likes: "161k",
-      views: "6M"
+      img: "/uploads/image-1779619184931.jpg",
+      link: "https://www.instagram.com/p/DRjx9ZmjDzv/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "722k",
+      views: "4M"
     },
     {
-      img: "/uploads/image-1779093113931.jpg",
-      link: "https://www.instagram.com/reel/DKZjmYJTSGI/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
-      likes: "133k",
-      views: "1.2M"
+      img: "/uploads/image-1779620926323.jpg",
+      link: "https://www.instagram.com/p/DNQQDoPt9no/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "299k",
+      views: "2.2M"
     },
     {
-      img: "/uploads/image-1779093202241.jpg",
-      link: "https://www.instagram.com/p/DO3UbYHE6eC/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
-      likes: "207k",
+      img: "/uploads/image-1779620978606.jpg",
+      link: "https://www.instagram.com/p/DTsWaYNDKAk/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "70k",
       views: "1.5M"
     },
     {
-      img: "/uploads/image-1779094058107.jpg",
-      link: "https://www.instagram.com/p/DPyk9EXjFyp/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
-      likes: "75k",
-      views: "1.8M"
+      img: "/uploads/image-1779621596365.jpg",
+      link: "https://www.instagram.com/p/DQWpx0bDOen/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "161k",
+      views: "6.5M"
     },
     {
-      img: "/uploads/image-1779094480931.jpg",
-      link: "https://www.instagram.com/reel/C99_SrBSItf/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
-      likes: "33k",
-      views: "0.5M"
-    },
-    {
-      img: "/uploads/image-1779094527271.jpg",
-      link: "https://www.instagram.com/p/DRjx9ZmjDzv/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
-      likes: "724k",
-      views: "4.5M"
-    },
-    {
-      img: "/uploads/image-1779094617277.jpg",
-      link: "https://www.instagram.com/p/DNQQDoPt9no/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
-      likes: "299K",
-      views: "2.3M"
-    },
-    {
-      img: "/uploads/image-1779105433573.jpeg",
+      img: "/uploads/image-1779620185186.jpg",
       link: "https://www.instagram.com/p/DM-cYhFTD_x/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
-      likes: "112K",
-      views: "2.0M"
+      likes: "112k",
+      views: "2M"
     },
+    {
+      img: "/uploads/image-1779621126636.jpg",
+      link: "https://www.instagram.com/reel/DKZjmYJTSGI/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "132k",
+      views: "1.3M"
+    },
+    {
+      img: "/uploads/image-1779624354302.jpg",
+      link: "https://www.instagram.com/p/DLUtFGyz4cl/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "519K",
+      views: "8.2M"
+    },
+    {
+      img: "/uploads/20250501_170736.jpg",
+      link: "https://www.instagram.com/p/DMpsdmzTKtE/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "776k",
+      views: "10.2M"
+    },
+    {
+      img: "/uploads/IMG_20250910_132538552.jpg",
+      link: "https://www.instagram.com/p/DQMWuInkwD3/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "241k",
+      views: "10M"
+    },
+    {
+      img: "/uploads/3ba6c9cf-3e01-4c79-95c1-dfd01f5611b5.png",
+      link: "https://www.instagram.com/p/DPOdi18jPf4/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "132k",
+      views: "1.3M"
+    },
+    {
+      img: "/uploads/image-1779621466741.jpg",
+      link: "https://www.instagram.com/p/DO3UbYHE6eC/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      likes: "206k",
+      views: "1.6M"
+    },
+
 
   ];
   const heroRef = useRef(null);
@@ -580,7 +599,7 @@ const Home = () => {
                 matWidth: '11px'
               }
             ].map((config, idx) => {
-              const sketchImg = sketches.length > 0 
+              const sketchImg = sketches.length > 0
                 ? (sketches[idx % sketches.length]?.images?.[0] || realInstaData[idx % realInstaData.length].img)
                 : realInstaData[idx % realInstaData.length].img;
 
@@ -622,6 +641,15 @@ const Home = () => {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </a>
+            <a href="/custom-request" className="hero-custom-btn">
+              <span className="hero-custom-btn__text">Custom Request</span>
+              <span className="hero-custom-btn__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                 </svg>
               </span>
             </a>
@@ -754,7 +782,7 @@ const Home = () => {
               <div className="loading-state">No sketches found.</div>
             ) : (
               <>
-                <div 
+                <div
                   className="sketch-deck-container"
                   ref={deckContainerRef}
                   onMouseDown={handleDragStart}
@@ -765,7 +793,7 @@ const Home = () => {
                   {sketches.map((sketch, idx) => {
                     const isCardActive = idx === activeIndex;
                     const cardStyle = getCardStyle(idx);
-                    
+
                     return (
                       <Link
                         to={`/product/${sketch._id}`}
@@ -784,12 +812,12 @@ const Home = () => {
                             width="280"
                             height="380"
                           />
-                          
+
                           {/* Artwork tagline display overlay - exclusive to active card via CSS opacity transition */}
                           <div className="showcase-info">
                             <span>{sketch.tagline || sketch.category}</span>
                           </div>
-                          
+
                           {/* Active visual hint */}
                           {isCardActive && (
                             <div className="card-swipe-hint">
@@ -806,9 +834,9 @@ const Home = () => {
 
                 {/* Controls Bar */}
                 <div className="sketch-slider-controls glass">
-                  <button 
-                    onClick={handlePrev} 
-                    className="slider-btn prev-btn" 
+                  <button
+                    onClick={handlePrev}
+                    className="slider-btn prev-btn"
                     aria-label="Previous artwork"
                     disabled={isSwiping}
                   >
@@ -818,9 +846,9 @@ const Home = () => {
                     </svg>
                   </button>
 
-                  <button 
-                    onClick={handleNext} 
-                    className="slider-btn next-btn" 
+                  <button
+                    onClick={handleNext}
+                    className="slider-btn next-btn"
                     aria-label="Next artwork"
                     disabled={isSwiping}
                   >
@@ -1150,8 +1178,46 @@ const Home = () => {
           margin-top: 2.5rem;
           display: flex;
           justify-content: center;
+          gap: 1.25rem;
+          flex-wrap: wrap;
           opacity: 0;
           animation: taglineFadeUp 0.7s ease 0.7s forwards;
+        }
+
+        /* Custom Request Button */
+        .hero-custom-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 1rem 2.25rem;
+          border-radius: 9999px;
+          font-family: 'Manrope', sans-serif;
+          font-size: 1rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          text-decoration: none;
+          color: #fff;
+          background: rgba(255, 255, 255, 0.03);
+          border: 2px solid rgba(189, 0, 255, 0.5);
+          position: relative;
+          transition: all 0.3s ease;
+          box-shadow: 0 0 8px rgba(189, 0, 255, 0.1), 0 3px 10px rgba(0,0,0,0.2);
+        }
+        .hero-custom-btn:hover {
+          background: rgba(189, 0, 255, 0.15);
+          border-color: #ff36c8;
+          transform: translateY(-2px) scale(1.03);
+          box-shadow: 0 0 16px rgba(189, 0, 255, 0.25), 0 6px 18px rgba(0,0,0,0.25);
+          color: #fff;
+        }
+        .hero-custom-btn:hover .hero-custom-btn__icon {
+          transform: translateX(5px);
+        }
+        .hero-custom-btn__icon {
+          display: flex;
+          align-items: center;
+          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         /* Explore Gallery Button */
@@ -1670,8 +1736,9 @@ const Home = () => {
           }
           .hero-btn-container {
             margin-top: 2rem;
+            gap: 1rem;
           }
-          .hero-explore-btn {
+          .hero-explore-btn, .hero-custom-btn {
             padding: 0.85rem 2rem;
             font-size: 0.9rem;
           }
@@ -1695,8 +1762,8 @@ const Home = () => {
             margin-top: 1.5rem;
           }
           .gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
           }
           .gallery-item {
             border-radius: 0.75rem;
@@ -1726,11 +1793,11 @@ const Home = () => {
           }
           .gallery-title {
             font-family: 'Epilogue', sans-serif;
-            font-size: clamp(0.75rem, 3vw, 0.95rem);
+            font-size: clamp(0.6rem, 2.5vw, 0.8rem);
             color: #fff;
             font-weight: 700;
             text-transform: capitalize;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
             text-align: center;
             margin: 0;
             line-height: 1.3;

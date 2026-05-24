@@ -104,7 +104,7 @@ const ArtAcademy = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_BASE = import.meta.env.VITE_API_URL || '';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -403,6 +403,9 @@ const ArtAcademy = () => {
           .academy-grid {
             grid-template-columns: 1fr;
             gap: 2.5rem;
+          }
+          .academy-card {
+            order: -1;
           }
           .academy-title {
             font-size: clamp(1.6rem, 5vw, 2.2rem);

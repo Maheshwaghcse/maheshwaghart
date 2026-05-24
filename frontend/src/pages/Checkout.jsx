@@ -27,12 +27,37 @@ const Checkout = () => {
   const [orderId, setOrderId] = useState('');
 
   useEffect(() => {
-    if (!userInfo) {
-      navigate('/login?redirect=checkout');
-    } else if (userInfo.email && !formData.email) {
+    if (formData.email) return;
+
+    const isGuest = !userInfo;
+    const addressKey = isGuest 
+      ? 'sketch_shipping_address_guest' 
+      : `sketch_shipping_address_${userInfo.email}`;
+    const savedAddress = localStorage.getItem(addressKey);
+
+    if (savedAddress) {
+      try {
+        const parsed = JSON.parse(savedAddress);
+        setFormData({
+          email: parsed.email || (isGuest ? '' : userInfo.email) || '',
+          fullName: parsed.fullName || (isGuest ? '' : userInfo.name) || '',
+          phone: parsed.phone || '',
+          address: parsed.address || '',
+          city: parsed.city || '',
+          state: parsed.state || '',
+          postalCode: parsed.postalCode || '',
+          country: parsed.country || '',
+        });
+      } catch (e) {
+        console.error('Error parsing saved address:', e);
+        if (!isGuest) {
+          setFormData(prev => ({ ...prev, email: userInfo.email, fullName: userInfo.name || '' }));
+        }
+      }
+    } else if (!isGuest) {
       setFormData(prev => ({ ...prev, email: userInfo.email, fullName: userInfo.name || '' }));
     }
-  }, [userInfo, navigate]);
+  }, [userInfo, navigate, formData.email]);
 
   useEffect(() => {
     if (cartItems.length === 0 && !orderPlaced) {
@@ -59,12 +84,16 @@ const Checkout = () => {
     }
 
     try {
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      if (userInfo && userInfo.token) {
+        headers['Authorization'] = `Bearer ${userInfo.token}`;
+      }
+
       const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userInfo.token}`,
-        },
+        headers,
         body: JSON.stringify({
           orderItems: cartItems.map(item => ({
             sketch: item.sketch,
@@ -91,6 +120,22 @@ const Checkout = () => {
       setOrderId(data.order?._id || 'ORD-' + Date.now());
       setOrderPlaced(true);
       clearCart();
+
+      // Save shipping details to localStorage for future auto-fill
+      const addressKey = userInfo && userInfo.email 
+        ? `sketch_shipping_address_${userInfo.email}` 
+        : 'sketch_shipping_address_guest';
+      const addressData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        postalCode: formData.postalCode,
+        country: formData.country,
+      };
+      localStorage.setItem(addressKey, JSON.stringify(addressData));
 
       // WhatsApp message formatting
       let msg = `*Hello, I want to order from your Sketch Store 🎨*\n\n*Order Details:*\n`;

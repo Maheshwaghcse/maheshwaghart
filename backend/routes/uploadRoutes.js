@@ -38,15 +38,31 @@ function checkFileType(file, cb) {
 
 const upload = multer({
     storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     },
 });
 
-router.post('/', upload.single('image'), (req, res) => {
-    res.send({
-        message: 'Image Uploaded',
-        image: `/${req.file.path.replace(/\\/g, '/')}`,
+router.post('/', (req, res) => {
+    upload.single('image')(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            // Multer-specific errors (e.g. file too large)
+            return res.status(400).json({ message: err.message });
+        } else if (err) {
+            // File filter rejection (e.g. 'Images only!')
+            return res.status(400).json({ message: err });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ message: 'No image file received. Make sure the field name is "image".' });
+        }
+
+        const imagePath = `/${req.file.path.replace(/\\/g, '/')}`;
+        res.json({
+            message: 'Image Uploaded',
+            image: imagePath,
+        });
     });
 });
 

@@ -1,6 +1,6 @@
 // CustomRequest.jsx
 import React, { useState } from 'react';
-import { Send, MessageCircle, Mail, Sparkles, Upload, Zap } from 'lucide-react';
+import { Send, MessageCircle, Mail, Sparkles, Upload, Zap, X } from 'lucide-react';
 
 const CustomRequest = () => {
   const [formData, setFormData] = useState({
@@ -10,9 +10,83 @@ const CustomRequest = () => {
     referenceUrl: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [uploadedImage, setUploadedImage] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      await uploadFile(file);
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      await uploadFile(file);
+    }
+  };
+
+  const uploadFile = async (file) => {
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please select an image file (JPG, PNG, WEBP)');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError('Image size must be less than 5MB');
+      return;
+    }
+
+    const formDataUpload = new FormData();
+    formDataUpload.append('image', file);
+
+    setUploading(true);
+    setUploadError('');
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formDataUpload,
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to upload image');
+      }
+
+      setUploadedImage(data.image);
+      setFormData(prev => ({
+        ...prev,
+        referenceUrl: window.location.origin + data.image
+      }));
+    } catch (err) {
+      console.error(err);
+      setUploadError(err.message || 'Error uploading image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setUploadedImage('');
+    setFormData(prev => ({ ...prev, referenceUrl: '' }));
   };
 
   const handleSubmit = (e) => {
@@ -109,6 +183,45 @@ const CustomRequest = () => {
                 <label>Reference Image URL (optional)</label>
                 <input type="url" name="referenceUrl" value={formData.referenceUrl} onChange={handleChange} placeholder="Pinterest/Instagram/Google Drive link" />
               </div>
+              <div className="form-group upload-group">
+                <label>Or Upload Reference Image (optional)</label>
+                <div
+                  className={`upload-zone ${isDragging ? 'dragging' : ''} ${uploading ? 'uploading' : ''}`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => !uploadedImage && !uploading && document.getElementById('reference-file').click()}
+                >
+                  <input
+                    type="file"
+                    id="reference-file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                  />
+                  {uploadedImage ? (
+                    <div className="preview-container" onClick={(e) => e.stopPropagation()}>
+                      <img src={uploadedImage} alt="Reference Preview" className="upload-preview" />
+                      <button type="button" className="remove-img-btn" onClick={handleRemoveImage}>
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="upload-label">
+                      {uploading ? (
+                        <span className="upload-text">Uploading image...</span>
+                      ) : (
+                        <>
+                          <Upload size={24} className="upload-icon" />
+                          <span className="upload-text">Click to upload or drag & drop</span>
+                          <span className="upload-hint">Supports JPG, PNG, WEBP (Max 5MB)</span>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+                {uploadError && <span className="upload-error-msg">{uploadError}</span>}
+              </div>
               {submitted && <div className="success-message">✓ Request sent! I'll get back to you within 24 hours.</div>}
               <button type="submit" className="btn btn-primary submit-btn">
                 <Send size={18} /> Send Request
@@ -133,6 +246,85 @@ const CustomRequest = () => {
       <style>{`
         .custom-request-page {
           padding: 6rem 0;
+        }
+        .upload-group {
+          margin-top: 1.5rem;
+        }
+        .upload-zone {
+          border: 2px dashed var(--border-color);
+          border-radius: 1rem;
+          padding: 2rem;
+          text-align: center;
+          background: rgba(255, 255, 255, 0.01);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+        }
+        .upload-zone:hover, .upload-zone.dragging {
+          border-color: var(--primary-color);
+          background: rgba(112, 0, 255, 0.05);
+        }
+        .upload-label {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          cursor: pointer;
+          width: 100%;
+        }
+        .upload-icon {
+          color: var(--text-muted);
+          transition: color 0.3s ease;
+        }
+        .upload-zone:hover .upload-icon {
+          color: var(--primary-color);
+        }
+        .upload-text {
+          font-weight: 600;
+          color: #fff;
+        }
+        .upload-hint {
+          font-size: 0.8rem;
+          color: var(--text-muted);
+        }
+        .preview-container {
+          position: relative;
+          display: inline-block;
+          max-width: 150px;
+          margin: 0 auto;
+        }
+        .upload-preview {
+          width: 100%;
+          max-height: 150px;
+          object-fit: contain;
+          border-radius: 0.5rem;
+          border: 1px solid var(--border-color);
+        }
+        .remove-img-btn {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background: #ff3333;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          transition: background 0.2s;
+        }
+        .remove-img-btn:hover {
+          background: #cc0000;
+        }
+        .upload-error-msg {
+          color: #ff3333;
+          font-size: 0.85rem;
+          margin-top: 0.5rem;
+          display: block;
         }
         .request-header {
           text-align: center;
@@ -272,6 +464,9 @@ const CustomRequest = () => {
           .request-grid {
             grid-template-columns: 1fr;
             gap: 2rem;
+          }
+          .request-form-container {
+            order: -1;
           }
         }
         @media (max-width: 768px) {
