@@ -24,7 +24,7 @@ yarn-error.log*
 Thumbs.db
 
 # User uploads / local storage
-backend/uploads/*
+# backend/uploads/*
 !backend/uploads/.gitkeep
 
 # Local databases
