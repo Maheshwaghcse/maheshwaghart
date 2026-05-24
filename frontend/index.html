@@ -1,22 +1,65 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="MAHESHWAGH_ART — Premium charcoal, graphite and pencil portraits. Browse 500+ original artworks, commission custom sketches." />
-    <title>MAHESHWAGH_ART — Charcoal & Graphite Portraits</title>
 
-    <!-- Google Fonts: Preconnect for faster load -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;900&family=Manrope:wght@400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="Mahesh Wagh is a renowned portrait artist specializing in charcoal, graphite, and pencil sketches. Discover a stunning collection of lifelike artworks and commission custom portrait drawings of your loved ones." />
+  <meta name="keywords"
+    content="Mahesh Wagh, Portrait Artist, Charcoal Portraits, Pencil Sketches, Graphite Art, Realistic Portraits, Custom Artwork, Art Studio, Indian Artist" />
+  <meta name="author" content="Mahesh Wagh Art" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://your-domain.com/" />
+  <meta property="og:title" content="Mahesh Wagh | Realistic Portrait Artist | Charcoal & Pencil Sketches" />
+  <meta property="og:description"
+    content="Professional portrait artist creating lifelike charcoal and graphite sketches. Browse gallery and commission custom portraits." />
+  <meta property="og:image" content="https://your-domain.com/preview.jpg" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://your-domain.com/" />
+  <meta property="twitter:title" content="Mahesh Wagh | Realistic Portrait Artist | Charcoal & Pencil Sketches" />
+  <meta property="twitter:description"
+    content="Professional portrait artist creating lifelike charcoal and graphite sketches. Browse gallery and commission custom portraits." />
+  <meta property="twitter:image" content="https://your-domain.com/preview.jpg" />
+
+  <title>Mahesh Wagh | Realistic Portrait Artist | Charcoal & Pencil Sketches</title>
+
+  <!-- Google Fonts: Preconnect for faster load -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;900&family=Manrope:wght@400;600;700;800&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+  <script type="text/javascript">
+    (function (l) {
+      if (l.search[1] === "/") {
+        var decoded = l.search
+          .slice(1)
+          .split("&")
+          .map(function (s) {
+            return s.replace(/~and~/g, "&");
+          })
+          .join("?");
+        window.history.replaceState(
+          null,
+          null,
+          l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    })(window.location);
+  </script>
+</body>
+
 </html>
