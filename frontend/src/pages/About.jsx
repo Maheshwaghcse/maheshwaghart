@@ -62,7 +62,7 @@ const About = () => {
           </p>
           <div className="profile-row">
             <img
-              src="/uploads/20250718_120306.jpg"
+              src={`${import.meta.env.VITE_API_URL}/uploads/20250718_120306.jpg`}
               alt="Artist signature"
               className="profile-img"
             />
