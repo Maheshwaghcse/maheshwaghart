@@ -61,7 +61,7 @@ const CustomRequest = () => {
     setUploadError('');
 
     try {
-      const res = await fetch('/api/upload', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/upload`, {
         method: 'POST',
         body: formDataUpload,
       });
