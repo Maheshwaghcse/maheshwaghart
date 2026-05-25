@@ -44,18 +44,14 @@ router.post('/', (req, res) => {
             return res.status(400).json({ message: 'No image file received. Make sure the field name is "image".' });
         }
 
-        // For serverless (Vercel), we would normally upload this buffer to a cloud service (e.g. S3, Cloudinary).
-        // Since we are using memoryStorage, req.file.buffer contains the file data.
-        // We'll return a placeholder path or a data URL (not recommended for large files)
-        // Note: For a true serverless app, YOU MUST implement cloud storage upload here.
-        
-        // As a temporary stand-in to keep frontend from breaking immediately, 
-        // we'll return a mock path (this image won't actually be served by Vercel!)
-        const imagePath = `/uploads/${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`;
+        // Convert the file buffer to a base64 Data URI string
+        // This allows the image to be stored directly in MongoDB without needing Cloudinary/AWS S3
+        // Note: For very large applications, Cloudinary is recommended, but this works perfectly for now!
+        const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
         
         res.json({
-            message: 'Image received in memory (Requires Cloud Storage in Serverless)',
-            image: imagePath,
+            message: 'Image processed successfully',
+            image: base64Image,
         });
     });
 });
