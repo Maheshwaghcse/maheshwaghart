@@ -6,23 +6,9 @@ import fs from 'fs';
 
 const router = express.Router();
 
-// Ensure uploads folder exists
-const uploadDir = './uploads';
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
+// Since Vercel is read-only, we skip creating the uploads folder
 
-const storage = multer.diskStorage({
-    destination(req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename(req, file, cb) {
-        cb(
-            null,
-            `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-        );
-    },
-});
+const storage = multer.memoryStorage();
 
 function checkFileType(file, cb) {
     const filetypes = /jpg|jpeg|png|webp/;
@@ -58,9 +44,17 @@ router.post('/', (req, res) => {
             return res.status(400).json({ message: 'No image file received. Make sure the field name is "image".' });
         }
 
-        const imagePath = `/${req.file.path.replace(/\\/g, '/')}`;
+        // For serverless (Vercel), we would normally upload this buffer to a cloud service (e.g. S3, Cloudinary).
+        // Since we are using memoryStorage, req.file.buffer contains the file data.
+        // We'll return a placeholder path or a data URL (not recommended for large files)
+        // Note: For a true serverless app, YOU MUST implement cloud storage upload here.
+        
+        // As a temporary stand-in to keep frontend from breaking immediately, 
+        // we'll return a mock path (this image won't actually be served by Vercel!)
+        const imagePath = `/uploads/${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`;
+        
         res.json({
-            message: 'Image Uploaded',
+            message: 'Image received in memory (Requires Cloud Storage in Serverless)',
             image: imagePath,
         });
     });

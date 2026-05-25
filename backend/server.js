@@ -6,8 +6,8 @@ import connectDB from './config/db.js';
 
 dotenv.config();
 
-// Connect to Database
-connectDB();
+// We will connect to Database inside the API handler for serverless, or below for local dev
+// connectDB();
 
 const app = express();
 
@@ -45,6 +45,12 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 // Server reload triggered with fresh API Key
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Only listen when running locally (not on Vercel)
+if (!process.env.VERCEL) {
+    connectDB();
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+export default app;

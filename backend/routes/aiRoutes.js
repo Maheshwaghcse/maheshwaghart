@@ -9,21 +9,10 @@ import fs from 'fs';
 
 const router = express.Router();
 
-// Ensure uploads folder exists
-const uploadDir = './uploads';
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// Serverless mode: skip creating uploads directory
 
-// Setup multer to store temp files in the uploads directory
-const storage = multer.diskStorage({
-    destination(req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename(req, file, cb) {
-        cb(null, `${file.fieldname}-temp-${Date.now()}${path.extname(file.originalname)}`);
-    }
-});
+// Setup multer to store temp files in memory for serverless
+const storage = multer.memoryStorage();
 
 const upload = multer({ storage });
 

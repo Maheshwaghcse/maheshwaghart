@@ -1,6 +1,12 @@
 // Home.jsx (with moving blurred background)
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow, Navigation } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/navigation";
 
 const Home = () => {
   const [sketches, setSketches] = useState([]);
@@ -278,31 +284,41 @@ const Home = () => {
       img: "/uploads/image-1779619184931.jpg",
       link: "https://www.instagram.com/p/DRjx9ZmjDzv/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "722k",
-      views: "4M"
+      views: "4M",
+      title: "Divine Details",
+      caption: "A deep look into the eyes of devotion."
     },
     {
       img: "/uploads/image-1779620926323.jpg",
       link: "https://www.instagram.com/p/DNQQDoPt9no/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "299k",
-      views: "2.2M"
+      views: "2.2M",
+      title: "Charcoal Mastery",
+      caption: "Every stroke tells a story."
     },
     {
       img: "/uploads/image-1779620978606.jpg",
       link: "https://www.instagram.com/p/DTsWaYNDKAk/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "70k",
-      views: "1.5M"
+      views: "1.5M",
+      title: "Soulful Eyes",
+      caption: "Graphite and emotion intertwined."
     },
     {
       img: "/uploads/image-1779621596365.jpg",
       link: "https://www.instagram.com/p/DQWpx0bDOen/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "161k",
-      views: "6.5M"
+      views: "6.5M",
+      title: "Timeless Portrait",
+      caption: "Capturing a moment forever."
     },
     {
       img: "/uploads/image-1779620185186.jpg",
       link: "https://www.instagram.com/p/DM-cYhFTD_x/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "112k",
-      views: "2M"
+      views: "2M",
+      title: "Sacred Art",
+      caption: "Hand-drawn devotion."
     },
     {
       img: "/uploads/image-1779621126636.jpg",
@@ -338,7 +354,9 @@ const Home = () => {
       img: "/uploads/image-1779621466741.jpg",
       link: "https://www.instagram.com/p/DO3UbYHE6eC/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "206k",
-      views: "1.6M"
+      views: "1.6M",
+      title: "Classic Sketch",
+      caption: "A beautiful display of light and shadow."
     },
 
 
@@ -663,24 +681,6 @@ const Home = () => {
             </filter>
           </svg>
         </div>
-
-        {/* Marquee Section inside Hero to appear on first screen on mobile */}
-        <div className="marquee-section marquee-hero-mobile">
-          <div className="marquee-container">
-            <div className="marquee-content">
-              {['CHARCOAL', 'GRAPHITE', 'PORTRAITS', 'GOD SKETCHES', 'CUSTOM ART', 'MINIMALIST', 'REALISM'].map((text, i) => (
-                <div key={i} className="marquee-item outline-text">
-                  <span>{text}</span>
-                </div>
-              ))}
-              {['CHARCOAL', 'GRAPHITE', 'PORTRAITS', 'GOD SKETCHES', 'CUSTOM ART', 'MINIMALIST', 'REALISM'].map((text, i) => (
-                <div key={i + 100} className="marquee-item outline-text">
-                  <span>{text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Marquee Section below Hero on laptop/desktop */}
@@ -874,70 +874,54 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="insta-marquee">
-          <div className="insta-track">
+        <div className="swiper-insta-view">
+          <Swiper
+            effect={"coverflow"}
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView={"auto"}
+            loop={true}
+            modules={[EffectCoverflow, Navigation]}
+            navigation={true}
+            coverflowEffect={{
+              rotate: 0,
+              stretch: 0,
+              depth: 120,
+              modifier: 2.5,
+              slideShadows: false,
+              scale: 0.9,
+            }}
+            className="viralSwiper"
+          >
             {realInstaData.map((post, i) => (
-              <a
-                href={post.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                key={`insta-${i}`}
-                className="insta-card"
-              >
-                <div className="insta-img-container">
-                  <img
-                    src={post.img}
-                    alt="Instagram post"
-                    loading="lazy"
-                    decoding="async"
-                    width="300"
-                    height="300"
-                  />
-                </div>
-                <div className="insta-info">
-                  <div className="insta-stat">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                    <span>{post.likes}</span>
+              <SwiperSlide key={i}>
+                <a 
+                  href={post.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="viral-card"
+                  style={{ display: 'block' }}
+                >
+                  <img src={post.img} alt="Instagram Sketch" />
+                  
+                  <div className="instagram-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M7.75 2C4.57 2 2 4.57 2 7.75v8.5C2 19.43 4.57 22 7.75 22h8.5C19.43 22 22 19.43 22 16.25v-8.5C22 4.57 19.43 2 16.25 2h-8.5zm0 2h8.5C18.33 4 20 5.67 20 7.75v8.5C20 18.33 18.33 20 16.25 20h-8.5C5.67 20 4 18.33 4 16.25v-8.5C4 5.67 5.67 4 7.75 4zm8.75 1a1.25 1.25 0 100 2.5A1.25 1.25 0 0016.5 5zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z"/>
+                    </svg>
                   </div>
-                  <div className="insta-stat">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    <span>{post.views}</span>
+
+                  <div className="overlay">
+                    <div className="insta-stats">
+                      <div className="insta-stat">❤️ {post.likes}</div>
+                      <div className="insta-stat">👁️ {post.views}</div>
+                    </div>
+                    <h3>{post.title || 'Masterpiece'}</h3>
+                    <p>{post.caption || 'A stunning piece of art that captured hearts.'}</p>
                   </div>
-                </div>
-              </a>
+                </a>
+              </SwiperSlide>
             ))}
-            {/* Duplicate for seamless scroll */}
-            {realInstaData.map((post, i) => (
-              <a
-                href={post.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                key={`insta-dup-${i}`}
-                className="insta-card"
-              >
-                <div className="insta-img-container">
-                  <img
-                    src={post.img}
-                    alt="Instagram post"
-                    loading="lazy"
-                    decoding="async"
-                    width="300"
-                    height="300"
-                  />
-                </div>
-                <div className="insta-info">
-                  <div className="insta-stat">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
-                    <span>{post.likes}</span>
-                  </div>
-                  <div className="insta-stat">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    <span>{post.views}</span>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
+          </Swiper>
         </div>
 
       </section>
@@ -2175,72 +2159,120 @@ const Home = () => {
           overflow: hidden;
         }
         
-        .insta-marquee {
+        .swiper-insta-view {
+          position: relative;
+          width: 100%;
           margin-top: 3rem;
-          overflow: hidden;
-          white-space: nowrap;
-          padding: 2rem 0; /* Add vertical padding to prevent hover translation clipping */
-        }
-        
-        .insta-track {
-          display: flex;
-          gap: 1.5rem;
-          animation: instaScroll 25s linear infinite;
-          width: fit-content;
-          will-change: transform;
         }
 
-        .insta-marquee:hover .insta-track {
-          animation-play-state: paused;
+        .viralSwiper {
+          padding-top: 20px;
+          padding-bottom: 50px;
         }
-        
-        @keyframes instaScroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+
+        .viralSwiper .swiper-slide {
+          width: 320px; /* Slightly larger on desktop */
         }
-        
-        .insta-card {
-          flex-shrink: 0;
-          width: 260px;
-          border-radius: 1.25rem;
-          overflow: hidden;
+
+        @media (max-width: 768px) {
+          .viralSwiper .swiper-slide {
+            width: 280px; /* Original user size for mobile */
+          }
+        }
+
+        .viral-card {
           position: relative;
-          background: var(--surface-container, #1c1221);
-          border: 1px solid var(--outline-variant, rgba(189, 0, 255, 0.15));
-          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
-        }
-        
-        .insta-card:hover {
-          transform: translateY(-12px); /* Snappy upscale float upside */
-          box-shadow: 0 16px 36px rgba(189, 0, 255, 0.22);
-          border-color: var(--primary);
-        }
-
-        .insta-img-container {
-          width: 100%;
-          aspect-ratio: 1/1;
+          border-radius: 28px;
           overflow: hidden;
-          position: relative;
+          background: #111;
+          transform: scale(0.92);
+          transition: 0.4s ease;
+          display: block; /* ensure link tags fill */
         }
 
-        .insta-img-container img {
+        .swiper-slide-active .viral-card {
+          transform: scale(1);
+        }
+
+        .viral-card img {
           width: 100%;
-          height: 100%;
+          aspect-ratio: 4/5;
           object-fit: cover;
-          transition: transform 0.6s ease;
         }
 
-        .insta-card:hover .insta-img-container img {
-          transform: scale(1.04);
-        }
-
-        .insta-info {
-          padding: 0.85rem 1.25rem;
+        .overlay {
+          position: absolute;
+          inset: 0;
           display: flex;
-          align-items: center;
-          gap: 1.25rem;
-          background: linear-gradient(to bottom, rgba(25, 16, 28, 0.3), rgba(15, 9, 18, 0.95));
-          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          flex-direction: column;
+          justify-content: flex-end;
+          padding: 20px;
+          background: linear-gradient(
+            to top,
+            rgba(0,0,0,0.95),
+            transparent
+          );
+          z-index: 2;
+        }
+
+        .overlay h3 {
+          color: white;
+          font-family: 'Epilogue', sans-serif;
+          font-size: 1.1rem;
+          margin: 0 0 8px 0;
+          font-weight: 700;
+        }
+
+        .overlay p {
+          color: rgba(255,255,255,0.7);
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.85rem;
+          margin: 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .swiper-insta-view .swiper-button-next,
+        .swiper-insta-view .swiper-button-prev {
+          color: #fff;
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.3s ease;
+        }
+
+        .swiper-insta-view .swiper-button-next:active,
+        .swiper-insta-view .swiper-button-prev:active {
+          background: rgba(255, 255, 255, 0.25);
+          transform: scale(0.95);
+        }
+
+        .swiper-insta-view .swiper-button-next::after,
+        .swiper-insta-view .swiper-button-prev::after {
+          font-size: 1.2rem;
+          font-weight: 800;
+        }
+
+        .instagram-icon {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          color: #fff;
+          z-index: 3;
+          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+          opacity: 0.9;
+        }
+
+        .insta-stats {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 0.75rem;
         }
 
         .insta-stat {
@@ -2251,15 +2283,6 @@ const Home = () => {
           font-size: 0.85rem;
           color: rgba(255, 255, 255, 0.85);
           font-family: 'Manrope', sans-serif;
-        }
-
-        .insta-stat svg {
-          transition: transform 0.3s ease;
-          color: var(--primary, #bd00ff);
-        }
-
-        .insta-card:hover .insta-stat svg {
-          transform: scale(1.15);
         }
       `}</style>
     </>

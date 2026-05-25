@@ -8,27 +8,18 @@ const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const sanitizeKeyword = (kw) =>
   kw.replace(/[`'"\\{}[\]]/g, '').trim();
 
-// Convert local file to the Google Generative AI inline data structure (async)
-const fileToGenerativePart = async (path, mimeType) => {
-  const data = await fs.promises.readFile(path);
+// Convert in-memory buffer to the Google Generative AI inline data structure
+const bufferToGenerativePart = (buffer, mimeType) => {
   return {
     inlineData: {
-      data: data.toString('base64'),
+      data: buffer.toString('base64'),
       mimeType,
     },
   };
 };
 
-// Safe file deletion helper — never throws
-const safeDelete = (filePath) => {
-  try {
-    if (filePath && fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-  } catch (err) {
-    console.error('Failed to delete temp file:', err);
-  }
-};
+// Safe file deletion helper — (Not needed for memory storage, kept as no-op for compatibility)
+const safeDelete = (filePath) => {};
 
 // @desc    Generate AI Description from image and keywords
 // @route   POST /api/ai/generate
@@ -36,12 +27,12 @@ const safeDelete = (filePath) => {
 export const generateDescription = async (req, res) => {
   console.log(`\x1b[35m[AI Route]\x1b[0m Received generation request!`);
 
-  const filePath = req.file?.path ?? null;
+  const fileBuffer = req.file?.buffer ?? null;
 
   try {
     const { keywords } = req.body;
     console.log(`\x1b[35m[AI Route]\x1b[0m Body keywords:`, keywords);
-    console.log(`\x1b[35m[AI Route]\x1b[0m File:`, filePath ?? 'None');
+    console.log(`\x1b[35m[AI Route]\x1b[0m File:`, fileBuffer ? 'Received in memory' : 'None');
 
     // ── 1. Validate uploaded file presence ────────────────────────────────
     if (!req.file) {
@@ -50,7 +41,7 @@ export const generateDescription = async (req, res) => {
 
     // ── 2. Validate file MIME type ────────────────────────────────────────
     if (!ALLOWED_MIME_TYPES.includes(req.file.mimetype)) {
-      safeDelete(filePath);
+      // safeDelete(filePath); // Not needed for memory storage
       return res.status(400).json({
         error: 'Unsupported file type. Please upload a JPEG, PNG, or WebP image.',
       });
@@ -59,7 +50,7 @@ export const generateDescription = async (req, res) => {
     // ── 3. Verify Gemini API Key ──────────────────────────────────────────
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey || apiKey === 'your_gemini_api_key_here' || apiKey.trim() === '') {
-      safeDelete(filePath);
+      // safeDelete(filePath); // Not needed for memory storage
       return res.status(400).json({
         error:
           'Google Gemini API Key is missing. Please configure GEMINI_API_KEY in your server/.env file.',
@@ -88,8 +79,8 @@ export const generateDescription = async (req, res) => {
       },
     });
 
-    // ── 6. Build image part (async, non-blocking) ─────────────────────────
-    const imagePart = await fileToGenerativePart(filePath, req.file.mimetype);
+    // ── 6. Build image part (sync from buffer) ─────────────────────────
+    const imagePart = bufferToGenerativePart(fileBuffer, req.file.mimetype);
 
     // ── 7. Build prompt ───────────────────────────────────────────────────
     const keywordsForPrompt =
@@ -171,7 +162,6 @@ export const generateDescription = async (req, res) => {
       details: error.message,
     });
   } finally {
-    // ── Always clean up the temp file ─────────────────────────────────────
-    safeDelete(filePath);
+    // ── Memory cleanup happens automatically in Node.js ──
   }
 };
