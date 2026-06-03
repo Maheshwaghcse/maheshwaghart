@@ -826,7 +826,6 @@ const Home = () => {
                           <img src={sketch.images[0]} alt={sketch.title} />
                           <div className="overlay">
                             <h3>{sketch.title}</h3>
-                            <p>{sketch.tagline || 'Explore this piece'}</p>
                           </div>
                         </Link>
                       </SwiperSlide>
@@ -2193,18 +2192,32 @@ const Home = () => {
           padding: 20px;
           background: linear-gradient(
             to top,
-            rgba(0,0,0,0.95),
-            transparent
+            rgba(0,0,0,0.85) 0%,
+            rgba(0,0,0,0.3) 50%,
+            transparent 100%
           );
           z-index: 2;
+          /* NO blur/backdrop-filter here */
         }
 
         .overlay h3 {
           color: white;
           font-family: 'Epilogue', sans-serif;
-          font-size: 1.1rem;
-          margin: 0 0 8px 0;
+          font-size: 1rem;
+          margin: 0;
           font-weight: 700;
+          line-height: 1.3;
+        }
+
+        @media (max-width: 768px) {
+          .overlay h3 {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+          }
+          .overlay {
+            padding: 12px;
+          }
         }
 
         .overlay p {

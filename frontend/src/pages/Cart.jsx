@@ -39,7 +39,7 @@ const Cart = () => {
   return (
     <div className="animate-fade-in" style={{ padding: '6rem 0' }}>
       <div className="container">
-        <div style={{ marginBottom: '3rem' }}>
+        <div style={{ marginBottom: '3rem' }} className="cart-header">
           <span className="gallery-badge">ART COLLECTION</span>
           <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', margin: '0.5rem 0' }}>
             Review Your <span className="text-gradient">Cart</span>
@@ -361,6 +361,13 @@ const Cart = () => {
           color: var(--text-muted);
         }
         @media (max-width: 768px) {
+          .cart-header {
+            text-align: center;
+          }
+          .cart-header .gallery-badge {
+            display: block;
+            text-align: center;
+          }
           .cart-item {
             flex-wrap: wrap;
           }

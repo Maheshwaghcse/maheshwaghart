@@ -102,12 +102,12 @@ const forgotPassword = async (req, res) => {
         const frontendUrl = req.get('origin') || process.env.FRONTEND_URL || 'http://localhost:5173';
         const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
-        const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+        const message = `You are receiving this email because you (or someone else) has requested the reset of a password. \n\n ${resetUrl}`;
 
         try {
             await sendEmail({
                 email: user.email,
-                subject: 'Password reset token',
+                subject: 'Password Reset Request',
                 message
             });
 

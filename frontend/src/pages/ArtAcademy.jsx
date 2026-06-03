@@ -329,7 +329,7 @@ const ArtAcademy = () => {
           padding: 0.5rem 1.25rem;
           background: rgba(189, 0, 255, 0.1);
           border: 1px solid rgba(189, 0, 255, 0.25);
-          borderRadius: 99px;
+          border-radius: 99px;
           color: #ecb2ff;
           font-size: 0.8rem;
           font-weight: 700;
@@ -444,14 +444,25 @@ const ArtAcademy = () => {
           }
           .academy-pitch {
             order: -1;
+            align-items: center;
+            text-align: center;
           }
-          .academy-title {
-            font-size: clamp(1.6rem, 5vw, 2.2rem);
+          .academy-pitch .academy-badge {
+            margin-left: auto;
+            margin-right: auto;
           }
           .academy-subtitle {
             font-size: 0.95rem;
             line-height: 1.6;
             margin-bottom: 1.75rem;
+            text-align: center;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .academy-title {
+            font-size: clamp(1.6rem, 5vw, 2.2rem);
+            text-align: center;
           }
           .academy-card {
             padding: 2rem 1.25rem;
