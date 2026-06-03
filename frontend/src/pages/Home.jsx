@@ -834,6 +834,10 @@ const Home = () => {
                   </Swiper>
                 </div>
               </>
+            )}
+          </div>
+        </div>
+      </section>
 
       {/* Instagram Feed Section (Marquee Style) */}
       <section className="instagram-section">
