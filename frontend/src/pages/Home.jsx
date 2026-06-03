@@ -10,10 +10,12 @@ import "swiper/css/navigation";
 
 const Home = () => {
   const [sketches, setSketches] = useState([]);
+  const [featuredSketches, setFeaturedSketches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   const [gridLimit] = useState(9);
+  const [showcaseSwiper, setShowcaseSwiper] = useState(null);
 
   const dragStart = useRef({ x: 0, y: 0 });
   const dragOffsetRef = useRef({ x: 0, y: 0 });
@@ -281,85 +283,93 @@ const Home = () => {
   // Real Instagram Data - You can update this with your actual post links and images
   const realInstaData = [
     {
-      img: "/uploads/image-1779619184931.jpg",
+      img: "/images/maheshwagh_art-20260603-0001.jpg",
       link: "https://www.instagram.com/p/DRjx9ZmjDzv/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "722k",
       views: "4M",
-      title: "Divine Details",
-      caption: "A deep look into the eyes of devotion."
+      title: "Infinite Silence",
+      caption: "The universe chanted with him."
     },
     {
-      img: "/uploads/image-1779620926323.jpg",
+      img: "/images/maheshwagh_art-20260603-0004.jpg",
       link: "https://www.instagram.com/p/DNQQDoPt9no/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "299k",
       views: "2.2M",
-      title: "Charcoal Mastery",
-      caption: "Every stroke tells a story."
+      title: "He Never Spoke",
+      caption: "The darkness bowed anyway."
     },
     {
-      img: "/uploads/image-1779620978606.jpg",
+      img: "/images/maheshwagh_art-20260603-0002.jpg",
       link: "https://www.instagram.com/p/DTsWaYNDKAk/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "70k",
       views: "1.5M",
-      title: "Soulful Eyes",
-      caption: "Graphite and emotion intertwined."
+      title: "God Was A Child",
+      caption: "But his eyes knew eternity."
     },
     {
-      img: "/uploads/image-1779621596365.jpg",
+      img: "/images/maheshwagh_art-20260603-0003.jpg",
       link: "https://www.instagram.com/p/DQWpx0bDOen/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "161k",
       views: "6.5M",
-      title: "Timeless Portrait",
-      caption: "Capturing a moment forever."
+      title: "Never Two",
+      caption: "Even cosmos bows to them."
     },
     {
-      img: "/uploads/image-1779620185186.jpg",
+      img: "/images/maheshwagh_art-20260603-0006.webp",
       link: "https://www.instagram.com/p/DM-cYhFTD_x/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "112k",
       views: "2M",
-      title: "Sacred Art",
-      caption: "Hand-drawn devotion."
+      title: "Hidden Face",
+      caption: "Even destruction looks gentle."
     },
     {
-      img: "/uploads/image-1779621126636.jpg",
+      img: "/images/maheshwagh_art-20260603-0007.jpg",
       link: "https://www.instagram.com/reel/DKZjmYJTSGI/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "132k",
-      views: "1.3M"
+      views: "1.3M",
+      title: "The Serpent Chose Him",
+      caption: "Not every king wears a crown."
     },
     {
-      img: "/uploads/image-1779624354302.jpg",
+      img: "/images/maheshwagh_art-20260603-0001.webp",
       link: "https://www.instagram.com/p/DLUtFGyz4cl/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "519K",
-      views: "8.2M"
+      views: "8.2M",
+      title: "Her Surrender",
+      caption: "His shadow was enough."
     },
     {
-      img: "/uploads/20250501_170736.jpg",
+      img: "/images/maheshwagh_art-20260603-0002.webp",
       link: "https://www.instagram.com/p/DMpsdmzTKtE/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "776k",
-      views: "10.2M"
+      views: "10.2M",
+      title: "Look Closer",
+      caption: "Devotion has no language."
     },
     {
-      img: "/uploads/IMG_20250910_132538552.jpg",
+      img: "/images/maheshwagh_art-20260603-0004.webp",
       link: "https://www.instagram.com/p/DQMWuInkwD3/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "241k",
-      views: "10M"
+      views: "10M",
+      title: "A Tear Knows",
+      caption: "What words never could."
     },
     {
-      img: "/uploads/3ba6c9cf-3e01-4c79-95c1-dfd01f5611b5.png",
+      img: "/images/kali_mahakaali.webp",
       link: "https://www.instagram.com/p/DPOdi18jPf4/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "132k",
-      views: "1.3M"
+      views: "1.3M",
+      title: "Not Angry",
+      caption: "Just the last warning."
     },
     {
-      img: "/uploads/image-1779621466741.jpg",
+      img: "/images/maheshwagh_art-20260603-0005.webp",
       link: "https://www.instagram.com/p/DO3UbYHE6eC/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
       likes: "206k",
       views: "1.6M",
-      title: "Classic Sketch",
-      caption: "A beautiful display of light and shadow."
-    },
-
-
+      title: "She Leaned",
+      caption: "He held all three worlds."
+    }
   ];
   const heroRef = useRef(null);
 
@@ -373,6 +383,9 @@ const Home = () => {
         const data = await res.json();
         if (Array.isArray(data)) {
           setSketches(data);
+          // Shuffle and pick 9 random sketches for Featured Works on every load
+          const shuffled = [...data].sort(() => 0.5 - Math.random());
+          setFeaturedSketches(shuffled.slice(0, gridLimit));
         } else {
           throw new Error('Fetched data is not an array');
         }
@@ -384,7 +397,7 @@ const Home = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [gridLimit]);
 
   // Magnetic button effect
   const handleMagnetic = useCallback((e) => {
@@ -723,7 +736,7 @@ const Home = () => {
                 </div>
               ))
             ) : (
-              sketches.slice(0, gridLimit).map((sketch) => (
+              featuredSketches.map((sketch) => (
                 <Link to={`/product/${sketch._id}`} key={sketch._id} className="gallery-item">
                   <div className="gallery-img-wrapper">
                     <img
@@ -762,7 +775,7 @@ const Home = () => {
           <div className="section-header">
             <span className="section-badge">PORTFOLIO</span>
             <h2>ART THAT <span className="text-gradient">INSPIRES</span></h2>
-            <p>Drag the fanned artwork deck or tap on any background card to cycle. Tapping the active sketch opens its story.</p>
+            <p>Shuffle through devotion, tap the one that calls.</p>
           </div>
 
           <div className="sketch-slider-wrapper">
@@ -782,63 +795,68 @@ const Home = () => {
               <div className="loading-state">No sketches found.</div>
             ) : (
               <>
-                <div
-                  className="sketch-deck-container"
-                  ref={deckContainerRef}
-                  onMouseDown={handleDragStart}
-                  onMouseMove={handleDragMove}
-                  onMouseUp={handleDragEnd}
-                  onMouseLeave={handleDragEnd}
+                <Swiper
+                  effect={"coverflow"}
+                  grabCursor={true}
+                  centeredSlides={true}
+                  slidesPerView={"auto"}
+                  loop={true}
+                  modules={[EffectCoverflow]}
+                  onSwiper={setShowcaseSwiper}
+                  onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                  coverflowEffect={{
+                    rotate: 15,
+                    stretch: -20,
+                    depth: 130,
+                    modifier: 1.4,
+                    slideShadows: false,
+                  }}
+                  style={{ width: '100%', padding: '20px 0 40px' }}
                 >
                   {sketches.map((sketch, idx) => {
                     const isCardActive = idx === activeIndex;
-                    const cardStyle = getCardStyle(idx);
 
                     return (
-                      <Link
-                        to={`/product/${sketch._id}`}
-                        key={sketch._id}
-                        onClick={(e) => handleCardClick(idx, e)}
-                        className={`showcase-card ${isCardActive ? 'is-active' : ''}`}
-                        style={cardStyle}
-                        aria-label={`View artwork: ${sketch.title}`}
-                      >
-                        <div className="showcase-img-wrapper">
-                          <img
-                            src={sketch.images[0]}
-                            alt={sketch.title}
-                            loading={isCardActive ? "eager" : "lazy"}
-                            decoding="async"
-                            width="280"
-                            height="380"
-                          />
+                      <SwiperSlide key={sketch._id} style={{ width: '280px', height: '380px' }}>
+                        <Link
+                          to={`/product/${sketch._id}`}
+                          className={`showcase-card ${isCardActive ? 'is-active' : ''}`}
+                          aria-label={`View artwork: ${sketch.title}`}
+                          style={{
+                            position: 'relative',
+                            top: 'auto',
+                            left: 'auto',
+                            display: 'block',
+                            width: '100%',
+                            height: '100%'
+                          }}
+                        >
+                          <div className="showcase-img-wrapper">
+                            <img
+                              src={sketch.images[0]}
+                              alt={sketch.title}
+                              loading="lazy"
+                              decoding="async"
+                              width="280"
+                              height="380"
+                            />
 
-                          {/* Artwork tagline display overlay - exclusive to active card via CSS opacity transition */}
-                          <div className="showcase-info">
-                            <span>{sketch.tagline || sketch.category}</span>
-                          </div>
-
-                          {/* Active visual hint */}
-                          {isCardActive && (
-                            <div className="card-swipe-hint">
-                              <span className="hint-arrow">←</span>
-                              <span className="hint-text">Drag</span>
-                              <span className="hint-arrow">→</span>
+                            <div className="showcase-info">
+                              <span>{sketch.tagline || sketch.category}</span>
                             </div>
-                          )}
-                        </div>
-                      </Link>
+                          </div>
+                        </Link>
+                      </SwiperSlide>
                     );
                   })}
-                </div>
+                </Swiper>
 
                 {/* Controls Bar */}
                 <div className="sketch-slider-controls glass">
                   <button
-                    onClick={handlePrev}
+                    onClick={() => showcaseSwiper?.slidePrev()}
                     className="slider-btn prev-btn"
                     aria-label="Previous artwork"
-                    disabled={isSwiping}
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -846,11 +864,21 @@ const Home = () => {
                     </svg>
                   </button>
 
+                  <div className="slider-indicators">
+                    {sketches.map((_, idx) => (
+                      <button
+                        key={idx}
+                        className={`indicator-dot ${idx === activeIndex ? 'active' : ''}`}
+                        onClick={() => showcaseSwiper?.slideToLoop(idx)}
+                        aria-label={`Go to artwork ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+
                   <button
-                    onClick={handleNext}
+                    onClick={() => showcaseSwiper?.slideNext()}
                     className="slider-btn next-btn"
                     aria-label="Next artwork"
-                    disabled={isSwiping}
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -895,18 +923,18 @@ const Home = () => {
           >
             {realInstaData.map((post, i) => (
               <SwiperSlide key={i}>
-                <a 
-                  href={post.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href={post.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="viral-card"
                   style={{ display: 'block' }}
                 >
                   <img src={post.img} alt="Instagram Sketch" />
-                  
+
                   <div className="instagram-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7.75 2C4.57 2 2 4.57 2 7.75v8.5C2 19.43 4.57 22 7.75 22h8.5C19.43 22 22 19.43 22 16.25v-8.5C22 4.57 19.43 2 16.25 2h-8.5zm0 2h8.5C18.33 4 20 5.67 20 7.75v8.5C20 18.33 18.33 20 16.25 20h-8.5C5.67 20 4 18.33 4 16.25v-8.5C4 5.67 5.67 4 7.75 4zm8.75 1a1.25 1.25 0 100 2.5A1.25 1.25 0 0016.5 5zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z"/>
+                      <path d="M7.75 2C4.57 2 2 4.57 2 7.75v8.5C2 19.43 4.57 22 7.75 22h8.5C19.43 22 22 19.43 22 16.25v-8.5C22 4.57 19.43 2 16.25 2h-8.5zm0 2h8.5C18.33 4 20 5.67 20 7.75v8.5C20 18.33 18.33 20 16.25 20h-8.5C5.67 20 4 18.33 4 16.25v-8.5C4 5.67 5.67 4 7.75 4zm8.75 1a1.25 1.25 0 100 2.5A1.25 1.25 0 0016.5 5zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z" />
                     </svg>
                   </div>
 
@@ -1582,10 +1610,15 @@ const Home = () => {
           position: absolute;
           bottom: 0; left: 0; right: 0;
           padding: 1.5rem;
-          background: linear-gradient(transparent, rgba(25,16,28,0.95));
+          background: linear-gradient(to top, rgba(13, 7, 16, 0.95) 0%, rgba(13, 7, 16, 0.65) 60%, transparent 100%);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
           display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          transition: all 0.3s ease;
         }
         
         .gallery-category {
@@ -1601,9 +1634,12 @@ const Home = () => {
         
         .gallery-title {
           font-family: 'Epilogue', sans-serif;
-          font-size: 1.05rem;
-          font-weight: 700;
-          color: var(--on-surface);
+          font-size: 0.95rem;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #fff;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.5);
           margin: 0;
         }
 
@@ -1761,8 +1797,11 @@ const Home = () => {
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 1.25rem 0.85rem;
-            background: linear-gradient(transparent, rgba(13, 7, 16, 0.98) 70%);
+            padding: 1rem 0.75rem;
+            background: linear-gradient(to top, rgba(13, 7, 16, 0.95) 0%, rgba(13, 7, 16, 0.7) 60%, transparent 100%);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1777,15 +1816,15 @@ const Home = () => {
           }
           .gallery-title {
             font-family: 'Epilogue', sans-serif;
-            font-size: clamp(0.6rem, 2.5vw, 0.8rem);
+            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
             color: #fff;
-            font-weight: 700;
-            text-transform: capitalize;
-            letter-spacing: 0.01em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
             text-align: center;
             margin: 0;
             line-height: 1.3;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
           }
           .gallery-price {
             display: none;

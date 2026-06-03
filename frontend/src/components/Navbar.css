@@ -80,22 +80,6 @@
   color: var(--primary-color);
 }
 
-.theme-toggle {
-  background: none;
-  border: none;
-  color: var(--text-white);
-  cursor: pointer;
-  display: flex;
-  padding: 0.5rem;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--secondary-color);
-}
-
 .cart-link {
   position: relative;
 }
@@ -206,21 +190,6 @@
   .desktop-only {
     display: none;
   }
-
-  .theme-toggle-mobile {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: none;
-    border: 1px solid var(--border-color);
-    padding: 0.75rem 1.5rem;
-    border-radius: 99px;
-    color: var(--text-white);
-    font-weight: 700;
-    cursor: pointer;
-    width: 100%;
-    justify-content: center;
-  }
 }
 
 @media (max-width: 480px) {
@@ -252,6 +221,11 @@
     padding: 0.4rem 0.8rem;
     font-size: 0.65rem;
   }
+}
+
+/* Scroll Hide Behavior */
+.navbar.hidden {
+  transform: translateY(-100%);
 }
 
 @media (max-width: 350px) {

@@ -126,15 +126,19 @@ const ResetPassword = () => {
       
       <style>{`
         .login-page {
-          min-height: 80vh;
+          min-height: 85vh;
           display: flex;
           align-items: center;
           padding: 8rem 0 4rem;
+          background: radial-gradient(circle at center, rgba(189, 0, 255, 0.04) 0%, rgba(13, 7, 16, 1) 80%);
         }
         .login-container {
-          background: var(--bg-card);
+          background: rgba(38, 28, 40, 0.6);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
           border-radius: 2rem;
-          border: 1px solid var(--border-color);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(189, 0, 255, 0.1);
         }
       `}</style>
     </div>

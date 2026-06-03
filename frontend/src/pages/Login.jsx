@@ -132,79 +132,98 @@ const Login = () => {
 
       <style>{`
         .login-page {
-          min-height: 80vh;
+          min-height: 85vh;
           display: flex;
           align-items: center;
           padding: 8rem 0 4rem;
+          background: radial-gradient(circle at center, rgba(189, 0, 255, 0.04) 0%, rgba(13, 7, 16, 1) 80%);
         }
         .login-container {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 4rem;
-          background: var(--bg-card);
+          grid-template-columns: 1.1fr 1fr;
+          gap: 0;
+          background: rgba(38, 28, 40, 0.55);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
           border-radius: 2rem;
           overflow: hidden;
-          border: 1px solid var(--border-color);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(189, 0, 255, 0.08);
         }
         .login-left {
-          background: linear-gradient(135deg, rgba(255,92,0,0.1) 0%, rgba(0,0,0,0) 100%);
-          padding: 3rem;
+          background: linear-gradient(135deg, rgba(189, 0, 255, 0.08) 0%, rgba(255, 54, 200, 0.02) 100%);
+          padding: 4rem 3.5rem;
           display: flex;
           flex-direction: column;
           justify-content: center;
+          border-right: 1px solid rgba(255, 255, 255, 0.05);
         }
         .login-brand {
-          margin-bottom: 2rem;
+          margin-bottom: 2.5rem;
         }
         .brand-icon {
           font-size: 3rem;
           display: block;
-          margin-bottom: 1rem;
+          margin-bottom: 1.5rem;
         }
         .login-brand h2 {
-          font-size: 1.5rem;
-          margin-bottom: 0.5rem;
+          font-family: 'Epilogue', sans-serif;
+          font-size: 1.8rem;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          margin-bottom: 0.75rem;
+          color: #fff;
         }
         .login-brand p {
           color: var(--text-muted);
+          line-height: 1.6;
         }
         .login-features {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
+          gap: 1.25rem;
         }
         .feature {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
-          color: var(--text-muted);
+          gap: 1rem;
+          color: #d4c0d7;
+          font-size: 0.95rem;
         }
         .feature span:first-child {
-          width: 24px;
-          height: 24px;
-          background: rgba(34,197,94,0.1);
+          width: 26px;
+          height: 26px;
+          min-width: 26px;
+          background: rgba(34, 197, 94, 0.15);
           color: #22c55e;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 0.75rem;
+          font-size: 0.8rem;
+          font-weight: 700;
         }
         .login-right {
-          padding: 3rem;
+          padding: 4rem 3.5rem;
           display: flex;
           align-items: center;
+          justify-content: center;
         }
         .login-form-wrapper {
           width: 100%;
+          max-width: 380px;
         }
         .login-form-wrapper h1 {
-          font-size: 2rem;
+          font-family: 'Epilogue', sans-serif;
+          font-size: 2.2rem;
+          font-weight: 800;
           margin-bottom: 0.5rem;
+          letter-spacing: -0.03em;
         }
         .login-subtitle {
           color: var(--text-muted);
-          margin-bottom: 2rem;
+          margin-bottom: 2.5rem;
+          font-size: 0.95rem;
         }
 
         .password-input {
@@ -212,52 +231,90 @@ const Login = () => {
         }
         .password-input input {
           width: 100%;
-          padding-right: 2.5rem;
+          padding-right: 3rem;
         }
         .password-input button {
           position: absolute;
-          right: 0.75rem;
+          right: 1rem;
           top: 50%;
           transform: translateY(-50%);
           background: none;
           border: none;
           cursor: pointer;
           color: var(--text-muted);
+          transition: color 0.2s;
+          display: flex;
+          align-items: center;
         }
-        .login-btn { color: #fff;
+        .password-input button:hover {
+          color: #fff;
+        }
+        .login-btn { 
+          color: #fff;
           width: 100%;
           padding: 1rem;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 0.5rem;
-          margin-top: 1rem;
+          margin-top: 1.5rem;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
         }
         .login-footer {
-          margin-top: 2rem;
+          margin-top: 2.5rem;
           text-align: center;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
         }
         .login-footer p {
           color: var(--text-muted);
-          margin-bottom: 0.5rem;
+          margin: 0;
+          font-size: 0.95rem;
         }
         .login-footer a {
           color: var(--primary-color);
           text-decoration: none;
+          font-weight: 600;
+          transition: color 0.2s;
+        }
+        .login-footer a:hover {
+          color: #ff36c8;
         }
         .forgot-link {
           font-size: 0.85rem;
           color: var(--text-muted);
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+        .forgot-link:hover {
+          color: #fff;
         }
         @media (max-width: 968px) {
           .login-container {
             grid-template-columns: 1fr;
+            max-width: 480px;
+            margin: 0 auto;
           }
           .login-left {
             display: none;
           }
           .login-right {
-            padding: 2rem;
+            padding: 3rem 2rem;
+          }
+          .login-form-wrapper {
+            text-align: center;
+          }
+          .login-form-wrapper h1 {
+            font-size: 1.8rem;
+          }
+          .login-subtitle {
+            margin-bottom: 2rem;
+          }
+          .login-form-wrapper form {
+            text-align: left;
           }
         }
       `}</style>

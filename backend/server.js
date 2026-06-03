@@ -12,6 +12,7 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 import academyRoutes from './routes/academyRoutes.js';
+import customRequestRoutes from './routes/customRequestRoutes.js';
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/academy', academyRoutes);
+app.use('/api/custom-requests', customRequestRoutes);
 
 app.get('/', (req, res) => {
     res.send('API is running...');

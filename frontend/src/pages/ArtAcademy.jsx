@@ -184,12 +184,12 @@ const ArtAcademy = () => {
             </div>
 
             <h1 className="academy-title">
-              Mahesh Wagh Art <br />
+              Maheshwagh Art <br />
               <span className="text-gradient">Academy</span>
             </h1>
 
             <p className="academy-subtitle">
-              Unlock the secrets of hand-drawn mastery. Join our exclusive waitlist to secure early-bird access to comprehensive charcoal, graphite, and realistic sketching tutorials coached by Mahesh Wagh.
+              Unlock the secrets of hand-drawn mastery. Join my exclusive waitlist to secure early-bird access to comprehensive charcoal, graphite, and realistic sketching tutorials coached by Mahesh Wagh.
             </p>
 
             {/* Core Academy Pillars */}
@@ -293,6 +293,12 @@ const ArtAcademy = () => {
           gap: 4rem;
           align-items: center;
         }
+        .academy-pitch {
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
         .academy-badge {
           display: inline-flex;
           align-items: center;
@@ -319,18 +325,21 @@ const ArtAcademy = () => {
           color: var(--text-muted);
           font-size: 1.1rem;
           line-height: 1.7;
-          margin-bottom: 2.5rem;
+          margin: 0 auto 2.5rem;
           max-width: 500px;
         }
         .academy-pillars {
           display: flex;
           flex-direction: column;
           gap: 1.5rem;
+          width: 100%;
+          max-width: 500px;
         }
         .pillar-item {
           display: flex;
           gap: 1rem;
           align-items: flex-start;
+          text-align: left;
         }
         .pillar-icon {
           padding: 0.75rem;
@@ -404,7 +413,7 @@ const ArtAcademy = () => {
             grid-template-columns: 1fr;
             gap: 2.5rem;
           }
-          .academy-card {
+          .academy-pitch {
             order: -1;
           }
           .academy-title {

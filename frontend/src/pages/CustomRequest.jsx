@@ -14,6 +14,8 @@ const CustomRequest = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [uploadedImage, setUploadedImage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -89,14 +91,39 @@ const CustomRequest = () => {
     setFormData(prev => ({ ...prev, referenceUrl: '' }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // This would send to backend, for now just show success
-    const subject = `Custom Sketch Request from ${formData.name}`;
-    const body = `Name: ${formData.name}\nEmail: ${formData.email}\nDescription: ${formData.description}\nReference: ${formData.referenceUrl}`;
-    window.location.href = `mailto:maheshwagh113@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    setLoading(true);
+    setError('');
+    setSubmitted(false);
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/custom-requests`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to submit request');
+      }
+
+      setSubmitted(true);
+      setFormData({
+        name: '',
+        email: '',
+        description: '',
+        referenceUrl: ''
+      });
+      setUploadedImage('');
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -222,9 +249,10 @@ const CustomRequest = () => {
                 </div>
                 {uploadError && <span className="upload-error-msg">{uploadError}</span>}
               </div>
-              {submitted && <div className="success-message">✓ Request sent! I'll get back to you within 24 hours.</div>}
-              <button type="submit" className="btn btn-primary submit-btn">
-                <Send size={18} /> Send Request
+              {error && <div className="error-message" style={{ color: '#ff4d4d', marginTop: '0.5rem', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
+              {submitted && <div className="success-message" style={{ color: '#22c55e', marginTop: '0.5rem', marginBottom: '1rem', fontSize: '0.9rem' }}>✓ Request submitted! We'll notify you via email shortly.</div>}
+              <button type="submit" className="btn btn-primary submit-btn" disabled={loading}>
+                <Send size={18} /> {loading ? 'Submitting...' : 'Send Request'}
               </button>
             </form>
 
@@ -234,7 +262,7 @@ const CustomRequest = () => {
                 <a href="https://wa.me/917387062073?text=Hi! I'd like to commission a custom sketch." target="_blank" rel="noopener noreferrer" className="whatsapp-btn">
                   <MessageCircle size={20} /> WhatsApp
                 </a>
-                <a href="mailto:maheshwagh113@gmail.com?subject=Custom Sketch Commission" className="email-btn">
+                <a href="mailto:maheshwaghart@gmail.com?subject=Custom Sketch Commission" className="email-btn">
                   <Mail size={20} /> Email
                 </a>
               </div>

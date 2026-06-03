@@ -170,12 +170,12 @@ const Checkout = () => {
     return (
       <div className="animate-fade-in order-success" style={{ minHeight: '80vh', paddingTop: '6rem', paddingBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="success-container" style={{ textAlign: 'center', background: 'var(--bg-card)', padding: '4rem 2rem', borderRadius: '1.5rem', border: '1px solid var(--border-color)', maxWidth: '600px', width: '100%' }}>
-          <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', margin: '1rem 0' }}>
+            Your Peace Is On The <span className="text-gradient">Way</span>
+          </h1>
+          <div style={{ marginBottom: '2rem', marginTop: '1.5rem' }}>
             <CheckCircle size={64} style={{ color: 'var(--primary-color)' }} />
           </div>
-          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', margin: '1rem 0' }}>
-            Your Piece Is On Its <span className="text-gradient">Way</span>
-          </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.8', marginBottom: '1rem' }}>
             Your request is received and I'm already thinking about it
             Expect my WhatsApp message soon.</p>
@@ -666,6 +666,11 @@ const Checkout = () => {
           }
           .form-row {
             grid-template-columns: 1fr;
+          }
+          .order-summary-sidebar {
+            margin: 2rem auto 0;
+            max-width: 500px;
+            width: 100%;
           }
         }
       `}</style>

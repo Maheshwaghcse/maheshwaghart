@@ -160,11 +160,12 @@ const Gallery = () => {
         }
         .gallery-header {
           display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 2rem;
-          flex-wrap: wrap;
-          gap: 1rem;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          margin-bottom: 3rem;
+          width: 100%;
         }
         
         /* ─── Skeleton Loaders ─── */

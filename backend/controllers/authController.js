@@ -98,8 +98,8 @@ const forgotPassword = async (req, res) => {
         await user.save({ validateBeforeSave: false });
 
         // Create reset url
-        // Use environment variable for frontend URL, default to local Vite port
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        // Use request headers to get origin dynamically for production deployment, or fallback to FRONTEND_URL env var
+        const frontendUrl = req.get('origin') || process.env.FRONTEND_URL || 'http://localhost:5173';
         const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
         const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;

@@ -28,16 +28,16 @@ const sendAcademyEmails = async (leadDetails) => {
         // 2. Email to the Admin
         const adminMailOptions = {
             from: `"Art Academy Server" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER,
+            to: 'maheshwagh113@gmail.com',
             subject: `🚨 New Art Academy Lead: ${name}`,
-            text: `Hello Admin,\n\nA new student has joined the Art Academy waitlist!\n\nStudent Details:\n- Name: ${name}\n- Email: ${email}\n- Mobile: ${mobile}\n- Message: ${message || 'No custom message provided'}\n\nReview this entry in your MERN database platform.\n\nBest,\nYour Art Academy Server`
+            text: `Hello Mahesh,\n\nA new student has joined the Art Academy waitlist!\n\nStudent Details:\n- Name: ${name}\n- Email: ${email}\n- Mobile: ${mobile}\n- Message: ${message || 'No custom message provided'}\n\nBest,\nYour Art Academy Server`
         };
 
         console.log(`Sending confirmation email to student: ${email}...`);
         await transporter.sendMail(studentMailOptions);
         console.log('Student email sent successfully.');
 
-        console.log(`Sending alert notification email to admin: ${process.env.EMAIL_USER}...`);
+        console.log(`Sending alert notification email to admin: maheshwagh113@gmail.com...`);
         await transporter.sendMail(adminMailOptions);
         console.log('Admin alert email sent successfully.');
 

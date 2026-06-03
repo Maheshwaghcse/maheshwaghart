@@ -173,13 +173,17 @@ const Cart = () => {
           align-items: center;
           gap: 1.5rem;
           padding: 1.5rem;
-          background: var(--bg-card);
-          border-radius: 1rem;
+          background: rgba(38, 28, 40, 0.5);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border-radius: 1.5rem;
           border: 1px solid var(--border-color);
-          transition: 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .cart-item:hover {
-          border-color: rgba(255,92,0,0.3);
+          border-color: var(--primary-color);
+          box-shadow: 0 10px 30px rgba(189, 0, 255, 0.1);
+          transform: translateY(-2px);
         }
         .cart-item-image-container {
           position: relative;
@@ -363,6 +367,11 @@ const Cart = () => {
           .cart-item-total {
             width: 100%;
             text-align: right;
+          }
+          .order-summary {
+            margin: 2rem auto 0;
+            max-width: 500px;
+            width: 100%;
           }
         }
       `}</style>
