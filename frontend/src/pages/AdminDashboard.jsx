@@ -332,7 +332,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '3rem', alignItems: 'start' }}>
+        <div className="admin-layout-grid">
 
           {/* ── Form ── */}
           <div className="card" style={{ padding: '2rem' }}>
@@ -354,7 +354,7 @@ const AdminDashboard = () => {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="form-row-2">
                 <div className="form-group">
                   <label className="form-label">PRICE (₹) *</label>
                   <input
@@ -405,7 +405,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="form-row-2">
                 <div className="form-group">
                   <label className="form-label">CATEGORY *</label>
                   <select
@@ -661,6 +661,26 @@ const AdminDashboard = () => {
       </div>
 
       <style>{`
+        .admin-layout-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 3rem;
+          align-items: start;
+        }
+        .form-row-2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+        }
+        @media (max-width: 768px) {
+          .admin-layout-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+          }
+          .form-row-2 {
+            grid-template-columns: 1fr;
+          }
+        }
         .stats-badge {
           background: rgba(189, 0, 255, 0.1);
           border: 1px solid rgba(189, 0, 255, 0.25);

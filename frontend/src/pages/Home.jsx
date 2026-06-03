@@ -795,102 +795,45 @@ const Home = () => {
               <div className="loading-state">No sketches found.</div>
             ) : (
               <>
-                <Swiper
-                  effect={"coverflow"}
-                  grabCursor={true}
-                  centeredSlides={true}
-                  slidesPerView={"auto"}
-                  loop={true}
-                  modules={[EffectCoverflow]}
-                  onSwiper={setShowcaseSwiper}
-                  onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-                  coverflowEffect={{
-                    rotate: 15,
-                    stretch: -20,
-                    depth: 130,
-                    modifier: 1.4,
-                    slideShadows: false,
-                  }}
-                  style={{ width: '100%', padding: '20px 0 40px' }}
-                >
-                  {sketches.map((sketch, idx) => {
-                    const isCardActive = idx === activeIndex;
-
-                    return (
-                      <SwiperSlide key={sketch._id} style={{ width: '280px', height: '380px' }}>
+                <div className="swiper-insta-view" style={{ paddingBottom: '2rem' }}>
+                  <Swiper
+                    effect={"coverflow"}
+                    grabCursor={true}
+                    centeredSlides={true}
+                    slidesPerView={"auto"}
+                    loop={true}
+                    modules={[EffectCoverflow, Navigation]}
+                    navigation={true}
+                    onSwiper={setShowcaseSwiper}
+                    onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                    coverflowEffect={{
+                      rotate: 0,
+                      stretch: 0,
+                      depth: 120,
+                      modifier: 2.5,
+                      slideShadows: false,
+                      scale: 0.9,
+                    }}
+                    className="viralSwiper"
+                  >
+                    {sketches.map((sketch) => (
+                      <SwiperSlide key={sketch._id}>
                         <Link
                           to={`/product/${sketch._id}`}
-                          className={`showcase-card ${isCardActive ? 'is-active' : ''}`}
-                          aria-label={`View artwork: ${sketch.title}`}
-                          style={{
-                            position: 'relative',
-                            top: 'auto',
-                            left: 'auto',
-                            display: 'block',
-                            width: '100%',
-                            height: '100%'
-                          }}
+                          className="viral-card"
+                          style={{ display: 'block' }}
                         >
-                          <div className="showcase-img-wrapper">
-                            <img
-                              src={sketch.images[0]}
-                              alt={sketch.title}
-                              loading="lazy"
-                              decoding="async"
-                              width="280"
-                              height="380"
-                            />
-
-                            <div className="showcase-info">
-                              <span>{sketch.tagline || sketch.category}</span>
-                            </div>
+                          <img src={sketch.images[0]} alt={sketch.title} />
+                          <div className="overlay">
+                            <h3>{sketch.title}</h3>
+                            <p>{sketch.tagline || 'Explore this piece'}</p>
                           </div>
                         </Link>
                       </SwiperSlide>
-                    );
-                  })}
-                </Swiper>
-
-                {/* Controls Bar */}
-                <div className="sketch-slider-controls glass">
-                  <button
-                    onClick={() => showcaseSwiper?.slidePrev()}
-                    className="slider-btn prev-btn"
-                    aria-label="Previous artwork"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="19" y1="12" x2="5" y2="12"></line>
-                      <polyline points="12 19 5 12 12 5"></polyline>
-                    </svg>
-                  </button>
-
-                  <div className="slider-indicators">
-                    {sketches.map((_, idx) => (
-                      <button
-                        key={idx}
-                        className={`indicator-dot ${idx === activeIndex ? 'active' : ''}`}
-                        onClick={() => showcaseSwiper?.slideToLoop(idx)}
-                        aria-label={`Go to artwork ${idx + 1}`}
-                      />
                     ))}
-                  </div>
-
-                  <button
-                    onClick={() => showcaseSwiper?.slideNext()}
-                    className="slider-btn next-btn"
-                    aria-label="Next artwork"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                  </button>
+                  </Swiper>
                 </div>
               </>
-            )}
-          </div>
-        </div>
-      </section>
 
       {/* Instagram Feed Section (Marquee Style) */}
       <section className="instagram-section">
@@ -1799,8 +1742,6 @@ const Home = () => {
             right: 0;
             padding: 1rem 0.75rem;
             background: linear-gradient(to top, rgba(13, 7, 16, 0.95) 0%, rgba(13, 7, 16, 0.7) 60%, transparent 100%);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             justify-content: center;

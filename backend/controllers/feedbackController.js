@@ -68,11 +68,11 @@ const createFeedback = async (req, res) => {
 
         // Send thank you email if email was provided
         if (email) {
-            sendThankYouEmail(email, name || 'Art Lover');
+            await sendThankYouEmail(email, name || 'Art Lover');
         }
 
         // Send notification email to the artist
-        sendFeedbackNotificationEmail(createdFeedback);
+        await sendFeedbackNotificationEmail(createdFeedback);
 
         res.status(201).json(createdFeedback);
     } catch (error) {

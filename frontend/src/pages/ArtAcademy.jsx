@@ -192,8 +192,8 @@ const ArtAcademy = () => {
               Unlock the secrets of hand-drawn mastery. Join my exclusive waitlist to secure early-bird access to comprehensive charcoal, graphite, and realistic sketching tutorials coached by Mahesh Wagh.
             </p>
 
-            {/* Core Academy Pillars */}
-            <div className="academy-pillars">
+            {/* Core Academy Pillars (Desktop) */}
+            <div className="academy-pillars desktop-pillars">
               <div className="pillar-item">
                 <div className="pillar-icon">
                   <PenTool size={22} />
@@ -253,6 +253,29 @@ const ArtAcademy = () => {
             )}
           </div>
 
+          {/* Core Academy Pillars (Mobile) */}
+          <div className="academy-pillars mobile-pillars">
+            <div className="pillar-item">
+              <div className="pillar-icon">
+                <PenTool size={22} />
+              </div>
+              <div className="pillar-text">
+                <h3>Fundamentals to Hyperrealism</h3>
+                <p>Master shapes, values, textures, and fanning rules to breathe life into portraits.</p>
+              </div>
+            </div>
+
+            <div className="pillar-item">
+              <div className="pillar-icon">
+                <BookOpen size={22} />
+              </div>
+              <div className="pillar-text">
+                <h3>Bespoke Learning Resources</h3>
+                <p>Get premium exercise templates, reference libraries, and interactive assignments.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -294,10 +317,10 @@ const ArtAcademy = () => {
           align-items: center;
         }
         .academy-pitch {
-          text-align: center;
+          text-align: left;
           display: flex;
           flex-direction: column;
-          align-items: center;
+          align-items: flex-start;
         }
         .academy-badge {
           display: inline-flex;
@@ -325,7 +348,7 @@ const ArtAcademy = () => {
           color: var(--text-muted);
           font-size: 1.1rem;
           line-height: 1.7;
-          margin: 0 auto 2.5rem;
+          margin: 0 0 2.5rem 0;
           max-width: 500px;
         }
         .academy-pillars {
@@ -334,6 +357,12 @@ const ArtAcademy = () => {
           gap: 1.5rem;
           width: 100%;
           max-width: 500px;
+        }
+        .desktop-pillars {
+          display: flex;
+        }
+        .mobile-pillars {
+          display: none;
         }
         .pillar-item {
           display: flex;
@@ -427,6 +456,13 @@ const ArtAcademy = () => {
           .academy-card {
             padding: 2rem 1.25rem;
             border-radius: 1.5rem;
+          }
+          .desktop-pillars {
+            display: none;
+          }
+          .mobile-pillars {
+            display: flex;
+            margin-top: 1rem;
           }
           .academy-card h2 {
             font-size: 1.4rem;

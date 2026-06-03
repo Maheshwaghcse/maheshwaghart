@@ -234,8 +234,13 @@ const ProductDetail = () => {
           color: var(--primary-color);
         }
         .product-loading, .product-notfound {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 50vh;
           text-align: center;
-          padding: 8rem 0;
+          padding: 2rem 0;
         }
 
         .product-grid {
