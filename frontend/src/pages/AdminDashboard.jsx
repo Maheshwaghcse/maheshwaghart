@@ -6,7 +6,8 @@ import {
   Plus, Trash2, LayoutDashboard, Image as ImageIcon, Layers, X, AlertCircle, Sparkles,
   Eye, Users, MousePointer, UserCheck, Activity, BarChart2 
 } from 'lucide-react';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import * as Recharts from 'recharts';
+const { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } = Recharts;
 
 const AdminDashboard = () => {
   const { userInfo } = useContext(AuthContext);

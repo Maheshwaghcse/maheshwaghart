@@ -750,7 +750,6 @@ const Home = () => {
                     <h3 className="gallery-title">
                       {sketch.title}
                     </h3>
-                    <div className="gallery-view-text">View Artwork</div>
                   </div>
                 </Link>
               ))
@@ -827,7 +826,6 @@ const Home = () => {
                           </div>
                           <div className="portfolio-info">
                             <h3>{sketch.title}</h3>
-                            <span className="portfolio-link-text">Discover</span>
                           </div>
                         </Link>
                       </SwiperSlide>
@@ -1753,41 +1751,27 @@ const Home = () => {
           .gallery-item {
             border-radius: 0.75rem;
           }
-          /* ── FEATURED WORKS cards: showcase-info style on mobile ── */
+          /* ── FEATURED WORKS cards mobile styling ── */
           .gallery-item:hover {
             transform: none; /* Disable desktop lift on touch */
           }
-          .gallery-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 1rem 0.75rem;
-            background: linear-gradient(to top, rgba(13, 7, 16, 0.95) 0%, rgba(13, 7, 16, 0.7) 60%, transparent 100%);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            justify-content: center;
+          .gallery-img-wrapper {
+            margin-bottom: 0.5rem;
+            border-radius: 0.4rem;
+          }
+          .gallery-info {
+            padding: 0 0.25rem;
             align-items: center;
-            flex-direction: column;
-            gap: 0;
-            /* Always visible on touch — no hover dependency */
-            opacity: 1;
-            transform: translateY(0);
+          }
+          .gallery-title {
+            font-size: clamp(0.55rem, 2vw, 0.75rem);
+            text-align: center;
+            margin: 0;
+            line-height: 1.2;
+            word-wrap: break-word;
           }
           .gallery-category {
             display: none;
-          }
-          .gallery-title {
-            font-family: 'Epilogue', sans-serif;
-            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
-            color: #fff;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            text-align: center;
-            margin: 0;
-            line-height: 1.3;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
           }
           .gallery-price {
             display: none;
@@ -2258,7 +2242,7 @@ const Home = () => {
 
         /* ─── Instagram Section ─── */
         .instagram-section {
-          padding: 8rem 0;
+          padding: 3rem 0 6rem 0;
           background: var(--surface-container-lowest);
           position: relative;
           z-index: 2;
