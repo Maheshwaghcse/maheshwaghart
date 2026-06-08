@@ -13,6 +13,8 @@ import aiRoutes from './routes/aiRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 import academyRoutes from './routes/academyRoutes.js';
 import customRequestRoutes from './routes/customRequestRoutes.js';
+import trackingRoutes from './routes/trackingRoutes.js';
+import trackVisitor from './middleware/trackVisitor.js';
 
 dotenv.config();
 
@@ -26,6 +28,9 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '10mb' }));   // needed for base64 image payloads
 
+// Global tracking middleware (runs on every route)
+app.use(trackVisitor);
+
 // ❌ REMOVED: express.static('uploads') — Vercel has no filesystem
 
 // Routes
@@ -37,6 +42,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/academy', academyRoutes);
 app.use('/api/custom-requests', customRequestRoutes);
+app.use('/api', trackingRoutes);
 
 app.get('/', (req, res) => {
     res.send('API is running...');

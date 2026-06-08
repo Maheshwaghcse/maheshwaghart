@@ -2,7 +2,11 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, LayoutDashboard, Image as ImageIcon, Layers, X, AlertCircle, Sparkles } from 'lucide-react';
+import { 
+  Plus, Trash2, LayoutDashboard, Image as ImageIcon, Layers, X, AlertCircle, Sparkles,
+  Eye, Users, MousePointer, UserCheck, Activity, BarChart2 
+} from 'lucide-react';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 const AdminDashboard = () => {
   const { userInfo } = useContext(AuthContext);
@@ -17,6 +21,12 @@ const AdminDashboard = () => {
   const [aiLoading, setAiLoading] = useState(false);
   const [keywords, setKeywords] = useState('');
   const selectedFileRef = useRef(null);
+
+  // Tab & Analytics states
+  const [activeTab, setActiveTab] = useState('artworks'); // 'artworks' or 'analytics'
+  const [stats, setStats] = useState(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [statsError, setStatsError] = useState('');
 
   // Form states
   const [editId, setEditId] = useState(null);
@@ -57,6 +67,13 @@ const AdminDashboard = () => {
     }
   }, [userInfo, navigate]);
 
+  // Load stats when activeTab shifts to analytics
+  useEffect(() => {
+    if (userInfo && userInfo.role === 'admin' && activeTab === 'analytics') {
+      fetchStats();
+    }
+  }, [userInfo, activeTab]);
+
   const fetchSketches = async () => {
     try {
       const res = await fetch(`${API_BASE}/api/sketches`);
@@ -67,6 +84,26 @@ const AdminDashboard = () => {
       setError('Failed to load collection');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    setStatsLoading(true);
+    setStatsError('');
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/stats`, {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to fetch tracking statistics');
+      setStats(data);
+    } catch (err) {
+      console.error('Failed to fetch stats:', err);
+      setStatsError(err.message || 'Failed to load analytics data');
+    } finally {
+      setStatsLoading(false);
     }
   };
 
@@ -321,6 +358,49 @@ const AdminDashboard = () => {
           </div>
         </div>
 
+        {/* Tab Switcher */}
+        <div className="admin-tabs" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '1rem',
+          marginBottom: '3rem',
+          borderBottom: '1px solid var(--border-color, rgba(255,255,255,0.08))',
+          paddingBottom: '1.5rem'
+        }}>
+          <button
+            type="button"
+            onClick={() => setActiveTab('artworks')}
+            className={`btn ${activeTab === 'artworks' ? 'btn-primary' : 'btn-outline'}`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              borderRadius: '9999px',
+              padding: '0.75rem 1.5rem',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            <Layers size={18} />
+            <span>Manage Artworks</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('analytics')}
+            className={`btn ${activeTab === 'analytics' ? 'btn-primary' : 'btn-outline'}`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              borderRadius: '9999px',
+              padding: '0.75rem 1.5rem',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            <BarChart2 size={18} />
+            <span>Visitor Analytics</span>
+          </button>
+        </div>
+
         {message && (
           <div className="success-message">
             <span>✓</span> {message}
@@ -332,7 +412,226 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <div className="admin-layout-grid">
+        {activeTab === 'analytics' ? (
+          <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+            {statsLoading ? (
+              <div style={{ padding: '8rem 0', textAlign: 'center', width: '100%' }}>
+                <div className="spinner"></div>
+                <p style={{ color: 'var(--text-muted)', marginTop: '1rem' }}>Loading analytics...</p>
+              </div>
+            ) : statsError ? (
+              <div className="error-message" style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
+                <AlertCircle size={18} /> {statsError}
+              </div>
+            ) : !stats ? (
+              <div style={{ padding: '4rem 0', textAlign: 'center', color: 'var(--text-muted)', width: '100%' }}>
+                No tracking statistics available.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', width: '100%' }}>
+                
+                {/* ── KPI Stat Cards ── */}
+                <div className="analytics-stats-grid">
+                  
+                  {/* Card 1: Total Visits */}
+                  <div className="analytics-card">
+                    <div className="card-icon-wrapper" style={{ background: 'rgba(189, 0, 255, 0.15)', color: '#bd00ff' }}>
+                      <Eye size={22} />
+                    </div>
+                    <div className="card-content">
+                      <span className="card-label">Total Visits</span>
+                      <h2 className="card-value">{stats.totalVisits}</h2>
+                    </div>
+                  </div>
+
+                  {/* Card 2: Registered User Visits */}
+                  <div className="analytics-card">
+                    <div className="card-icon-wrapper" style={{ background: 'rgba(54, 162, 235, 0.15)', color: '#36a2eb' }}>
+                      <UserCheck size={22} />
+                    </div>
+                    <div className="card-content">
+                      <span className="card-label">User Visits</span>
+                      <h2 className="card-value">{stats.loggedInVisits}</h2>
+                    </div>
+                  </div>
+
+                  {/* Card 3: Guest Visits */}
+                  <div className="analytics-card">
+                    <div className="card-icon-wrapper" style={{ background: 'rgba(255, 159, 64, 0.15)', color: '#ff9f40' }}>
+                      <Users size={22} />
+                    </div>
+                    <div className="card-content">
+                      <span className="card-label">Guest Visits</span>
+                      <h2 className="card-value">{stats.guestVisits}</h2>
+                    </div>
+                  </div>
+
+                  {/* Card 4: Unique Registered Users */}
+                  <div className="analytics-card">
+                    <div className="card-icon-wrapper" style={{ background: 'rgba(75, 192, 192, 0.15)', color: '#4bc0c0' }}>
+                      <Activity size={22} />
+                    </div>
+                    <div className="card-content">
+                      <span className="card-label">Unique Users</span>
+                      <h2 className="card-value">{stats.uniqueUsers}</h2>
+                    </div>
+                  </div>
+
+                  {/* Card 5: Unique Guests */}
+                  <div className="analytics-card">
+                    <div className="card-icon-wrapper" style={{ background: 'rgba(255, 99, 132, 0.15)', color: '#ff6384' }}>
+                      <MousePointer size={22} />
+                    </div>
+                    <div className="card-content">
+                      <span className="card-label">Unique Guests</span>
+                      <h2 className="card-value">{stats.uniqueGuests}</h2>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* ── Chart & Top Clicks ── */}
+                <div className="analytics-chart-section card" style={{ padding: '2rem' }}>
+                  <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <BarChart2 className="text-primary" />
+                    Top Clicked Buttons & Taps
+                  </h3>
+                  
+                  {stats.clickCounts.length === 0 ? (
+                    <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                      No click interaction data recorded yet.
+                    </div>
+                  ) : (
+                    <div style={{ width: '100%', height: 350 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={stats.clickCounts}
+                          margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke="var(--text-muted, #d4c0d7)" 
+                            tick={{ fill: 'var(--text-muted, #d4c0d7)', fontSize: 11 }}
+                            dy={10}
+                          />
+                          <YAxis 
+                            stroke="var(--text-muted, #d4c0d7)" 
+                            tick={{ fill: 'var(--text-muted, #d4c0d7)', fontSize: 11 }}
+                            allowDecimals={false}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              background: 'rgba(23, 15, 30, 0.95)',
+                              border: '1px solid var(--border-color, rgba(255,255,255,0.1))',
+                              borderRadius: '0.75rem',
+                              color: '#fff',
+                            }}
+                            cursor={{ fill: 'rgba(189, 0, 255, 0.05)' }}
+                          />
+                          <Bar 
+                            dataKey="count" 
+                            fill="url(#colorBarGrad)" 
+                            radius={[6, 6, 0, 0]}
+                            maxBarSize={50}
+                          >
+                            <defs>
+                              <linearGradient id="colorBarGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#bd00ff" stopOpacity={0.9} />
+                                <stop offset="95%" stopColor="#ff36c8" stopOpacity={0.6} />
+                              </linearGradient>
+                            </defs>
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
+                </div>
+
+                {/* ── Recent Visits Table ── */}
+                <div className="card" style={{ padding: '2rem', overflowX: 'auto' }}>
+                  <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Activity className="text-primary" />
+                    Recent Live Visits & Actions
+                  </h3>
+                  
+                  {stats.recentVisits.length === 0 ? (
+                    <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>No recent activity found.</p>
+                  ) : (
+                    <table className="analytics-table" style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '2px solid rgba(255,255,255,0.05)', textAlign: 'left' }}>
+                          <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>User / Guest</th>
+                          <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Page Route</th>
+                          <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Action Event</th>
+                          <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>IP & Device</th>
+                          <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Timestamp</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {stats.recentVisits.map((visit) => {
+                          const isGuest = visit.isGuest;
+                          const userText = isGuest 
+                            ? `Guest (${visit.guestId ? visit.guestId.substring(0, 8) : 'unknown'}...)`
+                            : visit.userId?.name || 'Registered User';
+                          const userSub = isGuest
+                            ? 'Anonymous Visitor'
+                            : visit.userId?.email || '';
+
+                          return (
+                            <tr key={visit._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                              <td style={{ padding: '1rem' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                  <span style={{ fontWeight: 600, fontSize: '0.9rem', color: isGuest ? '#d4c0d7' : '#ecb2ff' }}>
+                                    {userText}
+                                  </span>
+                                  {userSub && (
+                                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                      {userSub}
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td style={{ padding: '1rem' }}>
+                                <code style={{ color: '#bd00ff', fontSize: '0.85rem', background: 'rgba(189,0,255,0.05)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+                                  {visit.page}
+                                </code>
+                              </td>
+                              <td style={{ padding: '1rem' }}>
+                                {visit.action === 'visit' ? (
+                                  <span style={{ fontSize: '0.75rem', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '0.25rem 0.5rem', borderRadius: '9999px', fontWeight: 600 }}>
+                                    Page Visit
+                                  </span>
+                                ) : (
+                                  <span style={{ fontSize: '0.75rem', color: '#ff36c8', background: 'rgba(255,54,200,0.1)', padding: '0.25rem 0.5rem', borderRadius: '9999px', fontWeight: 600 }}>
+                                    Click: {visit.action}
+                                  </span>
+                                )}
+                              </td>
+                              <td style={{ padding: '1rem' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+                                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>IP: {visit.ip}</span>
+                                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={visit.userAgent}>
+                                    UA: {visit.userAgent}
+                                  </span>
+                                </div>
+                              </td>
+                              <td style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                                {new Date(visit.visitedAt).toLocaleString()}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="admin-layout-grid">
 
           {/* ── Form ── */}
           <div className="card" style={{ padding: '2rem' }}>
@@ -658,6 +957,7 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       <style>{`
@@ -754,6 +1054,71 @@ const AdminDashboard = () => {
           font-weight: 700;
           letter-spacing: 2px;
           margin-bottom: 1rem;
+        }
+
+        /* ── Visitor Tracking Custom Styles ── */
+        .analytics-stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1.5rem;
+          width: 100%;
+        }
+        .analytics-card {
+          background: var(--bg-card, rgba(23, 15, 30, 0.6));
+          border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+          border-radius: 1.25rem;
+          padding: 1.5rem;
+          display: flex;
+          align-items: center;
+          gap: 1.25rem;
+          transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        .analytics-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 30px rgba(189, 0, 255, 0.15);
+          border-color: rgba(189, 0, 255, 0.3);
+        }
+        .card-icon-wrapper {
+          width: 50px;
+          height: 50px;
+          border-radius: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .card-content {
+          display: flex;
+          flex-direction: column;
+        }
+        .card-label {
+          font-size: 0.75rem;
+          color: var(--text-muted, #d4c0d7);
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          font-weight: 600;
+        }
+        .card-value {
+          font-size: 1.75rem;
+          font-weight: 800;
+          margin: 0.25rem 0 0 0;
+          color: #fff;
+        }
+        .analytics-table th {
+          font-family: 'Manrope', sans-serif;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+        }
+        .analytics-table tr {
+          transition: background-color 0.2s ease;
+        }
+        .analytics-table tr:hover {
+          background: rgba(255, 255, 255, 0.02);
+        }
+        .analytics-table td {
+          vertical-align: middle;
         }
       `}</style>
     </div>

@@ -728,10 +728,8 @@ const Home = () => {
               Array.from({ length: gridLimit }).map((_, idx) => (
                 <div key={idx} className="gallery-item skeleton-card">
                   <div className="gallery-img-wrapper skeleton-img"></div>
-                  <div className="gallery-overlay" style={{ background: 'transparent' }}>
-                    <div style={{ width: '100%' }}>
-                      <div className="skeleton-text" style={{ width: '70%', margin: '0 auto' }}></div>
-                    </div>
+                  <div className="gallery-info" style={{ padding: '1rem 0' }}>
+                    <div className="skeleton-text" style={{ width: '70%' }}></div>
                   </div>
                 </div>
               ))
@@ -748,10 +746,11 @@ const Home = () => {
                       height="533"
                     />
                   </div>
-                  <div className="gallery-overlay">
+                  <div className="gallery-info">
                     <h3 className="gallery-title">
                       {sketch.title}
                     </h3>
+                    <div className="gallery-view-text">View Artwork</div>
                   </div>
                 </Link>
               ))
@@ -795,7 +794,7 @@ const Home = () => {
               <div className="loading-state">No sketches found.</div>
             ) : (
               <>
-                <div className="swiper-insta-view" style={{ paddingBottom: '2rem' }}>
+                <div className="portfolio-swiper-container" style={{ paddingBottom: '3rem' }}>
                   <Swiper
                     effect={"coverflow"}
                     grabCursor={true}
@@ -807,25 +806,28 @@ const Home = () => {
                     onSwiper={setShowcaseSwiper}
                     onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
                     coverflowEffect={{
-                      rotate: 0,
+                      rotate: 5,
                       stretch: 0,
-                      depth: 120,
-                      modifier: 2.5,
-                      slideShadows: false,
-                      scale: 0.9,
+                      depth: 100,
+                      modifier: 1.5,
+                      slideShadows: true,
+                      scale: 0.95,
                     }}
-                    className="viralSwiper"
+                    className="portfolioSwiper"
                   >
                     {sketches.map((sketch) => (
                       <SwiperSlide key={sketch._id}>
                         <Link
                           to={`/product/${sketch._id}`}
-                          className="viral-card"
+                          className="portfolio-card"
                           style={{ display: 'block' }}
                         >
-                          <img src={sketch.images[0]} alt={sketch.title} />
-                          <div className="overlay">
+                          <div className="portfolio-img-container">
+                            <img src={sketch.images[0]} alt={sketch.title} />
+                          </div>
+                          <div className="portfolio-info">
                             <h3>{sketch.title}</h3>
+                            <span className="portfolio-link-text">Discover</span>
                           </div>
                         </Link>
                       </SwiperSlide>
@@ -1526,67 +1528,84 @@ const Home = () => {
         }
         
         .gallery-item {
-          position: relative;
-          overflow: hidden;
-          border-radius: 1.5rem;
+          display: flex;
+          flex-direction: column;
           text-decoration: none;
           color: var(--on-surface);
-          background: var(--surface-container);
-          border: 1px solid var(--outline-variant);
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          group: hover;
         }
         
-        .gallery-img-wrapper { aspect-ratio: 3/4; overflow: hidden; }
+        .gallery-img-wrapper { 
+          aspect-ratio: 3/4; 
+          overflow: hidden; 
+          border-radius: 0.5rem;
+          margin-bottom: 1.2rem;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+          transition: all 0.5s ease;
+        }
         
         .gallery-item img {
           width: 100%; height: 100%;
           object-fit: cover;
-          transition: transform 0.6s ease;
+          transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
-        .gallery-item:hover {
-          transform: translateY(-10px);
-          border-color: var(--primary-container);
-          box-shadow: 0 20px 50px rgba(189, 0, 255, 0.18);
+        .gallery-item:hover .gallery-img-wrapper {
+          transform: translateY(-8px);
+          box-shadow: 0 15px 40px rgba(189, 0, 255, 0.15);
         }
         
-        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-item:hover img { transform: scale(1.03); }
         
-        .gallery-overlay {
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          padding: 1.5rem;
-          background: linear-gradient(to top, rgba(13, 7, 16, 0.95) 0%, rgba(13, 7, 16, 0.65) 60%, transparent 100%);
-          backdrop-filter: blur(6px);
-          -webkit-backdrop-filter: blur(6px);
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+        .gallery-info {
           display: flex;
-          justify-content: center;
-          align-items: center;
-          text-align: center;
-          transition: all 0.3s ease;
-        }
-        
-        .gallery-category {
-          font-family: 'Manrope', sans-serif;
-          font-size: 0.65rem;
-          color: var(--primary);
-          font-weight: 700;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          display: block;
-          margin-bottom: 0.35rem;
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 0 0.5rem;
         }
         
         .gallery-title {
-          font-family: 'Epilogue', sans-serif;
-          font-size: 0.95rem;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
+          font-family: 'Cinzel', serif;
+          font-size: 1.25rem;
+          font-weight: 500;
+          letter-spacing: 0.03em;
           color: #fff;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-          margin: 0;
+          margin: 0 0 0.5rem 0;
+          transition: color 0.3s ease;
+        }
+        
+        .gallery-view-text {
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 0.2em;
+          color: var(--outline);
+          position: relative;
+          transition: color 0.3s ease;
+        }
+        
+        .gallery-view-text::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 0;
+          height: 1px;
+          background: var(--primary);
+          transition: width 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-title {
+          color: var(--primary);
+        }
+        
+        .gallery-item:hover .gallery-view-text {
+          color: var(--primary-light);
+        }
+        
+        .gallery-item:hover .gallery-view-text::after {
+          width: 100%;
         }
 
         /* ─── Skeleton Loaders (Prevents CLS) ─── */
@@ -2131,6 +2150,110 @@ const Home = () => {
             width: 40px;
             height: 40px;
           }
+        }
+
+        /* ─── Portfolio Showcase Section ─── */
+        .portfolio-swiper-container {
+          position: relative;
+          width: 100%;
+          margin-top: 2rem;
+        }
+        
+        .portfolioSwiper {
+          padding-top: 2rem;
+          padding-bottom: 4rem;
+        }
+        
+        .portfolioSwiper .swiper-slide {
+          width: 400px;
+        }
+        
+        @media (max-width: 768px) {
+          .portfolioSwiper .swiper-slide {
+            width: 300px;
+          }
+        }
+        
+        .portfolio-card {
+          display: flex;
+          flex-direction: column;
+          background: transparent;
+          border-radius: 0;
+          overflow: visible;
+          transform: scale(0.9);
+          transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+          text-decoration: none;
+        }
+        
+        .portfolioSwiper .swiper-slide-active .portfolio-card {
+          transform: scale(1);
+        }
+        
+        .portfolio-img-container {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4/5;
+          overflow: hidden;
+          border-radius: 8px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+          transition: box-shadow 0.5s ease;
+        }
+        
+        .portfolioSwiper .swiper-slide-active .portfolio-img-container {
+          box-shadow: 0 20px 50px rgba(189, 0, 255, 0.2);
+        }
+        
+        .portfolio-card img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.7s ease;
+        }
+        
+        .portfolio-card:hover img {
+          transform: scale(1.05);
+        }
+        
+        .portfolio-info {
+          padding: 1.5rem 0;
+          text-align: center;
+          opacity: 0.5;
+          transform: translateY(10px);
+          transition: all 0.5s ease;
+        }
+        
+        .portfolioSwiper .swiper-slide-active .portfolio-info {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .portfolio-info h3 {
+          font-family: 'Cinzel', serif, 'Epilogue', sans-serif;
+          font-size: 1.5rem;
+          font-weight: 400;
+          letter-spacing: 0.05em;
+          color: #fff;
+          margin: 0 0 0.5rem 0;
+        }
+        
+        .portfolio-link-text {
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.8rem;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          color: var(--primary);
+          font-weight: 600;
+        }
+
+        .portfolioSwiper .swiper-button-next,
+        .portfolioSwiper .swiper-button-prev {
+          color: #fff;
+          background: rgba(13, 7, 16, 0.6);
+          backdrop-filter: blur(4px);
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* ─── Instagram Section ─── */

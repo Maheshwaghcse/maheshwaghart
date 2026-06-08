@@ -28,7 +28,7 @@ const sendAcademyEmails = async (leadDetails) => {
         // 2. Email to the Admin
         const adminMailOptions = {
             from: `"Art Academy Server" <${process.env.EMAIL_USER}>`,
-            to: 'maheshwagh113@gmail.com',
+            to: 'maheshwaghcse@gmail.com',
             subject: `🚨 New Art Academy Lead: ${name}`,
             text: `Hello Mahesh,\n\nA new student has joined the Art Academy waitlist!\n\nStudent Details:\n- Name: ${name}\n- Email: ${email}\n- Mobile: ${mobile}\n- Message: ${message || 'No custom message provided'}\n\nBest,\nYour Art Academy Server`
         };
@@ -37,7 +37,7 @@ const sendAcademyEmails = async (leadDetails) => {
         await transporter.sendMail(studentMailOptions);
         console.log('Student email sent successfully.');
 
-        console.log(`Sending alert notification email to admin: maheshwagh113@gmail.com...`);
+        console.log(`Sending alert notification email to admin: maheshwaghcse@gmail.com...`);
         await transporter.sendMail(adminMailOptions);
         console.log('Admin alert email sent successfully.');
 

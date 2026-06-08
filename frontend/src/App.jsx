@@ -21,12 +21,20 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword  = lazy(() => import('./pages/ResetPassword'));
 const ArtAcademy     = lazy(() => import('./pages/ArtAcademy'));
 
+import useTrackVisit from './hooks/useTrackVisit';
+
 // Scroll to top on every route change
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [pathname]);
+  return null;
+};
+
+// Sub-component to call useTrackVisit inside Router context
+const VisitorTracker = () => {
+  useTrackVisit();
   return null;
 };
 
@@ -62,6 +70,7 @@ function App() {
       <CartProvider>
         <Router>
           <ScrollToTop />
+          <VisitorTracker />
           <div className="custom-cursor" ref={cursorRef}></div>
           <Navbar />
           <main style={{ minHeight: '80vh' }}>

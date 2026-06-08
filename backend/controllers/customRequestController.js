@@ -15,17 +15,17 @@ const sendNotificationEmail = async (requestData) => {
         // Email to the artist (Maheshwagh art / Mahesh Wagh)
         const artistMailOptions = {
             from: `Maheshwagh Art <${process.env.EMAIL_USER}>`,
-            to: 'maheshwagh113@gmail.com',
+            to: 'maheshwaghcse@gmail.com',
             subject: `New Custom Sketch Request from ${requestData.name}`,
             text: `Hi Maheshwagh,\n\nYou have received a new custom sketch request commission!\n\nDetails:\nName: ${requestData.name}\nEmail: ${requestData.email}\nDescription:\n${requestData.description || 'No description provided.'}\n\nReference URL: ${requestData.referenceUrl || 'None Provided'}\n\nBest,\nMaheshwar Art System`
         };
 
         // Confirmation email to the customer
         const customerMailOptions = {
-            from: `Maheshwar Art <${process.env.EMAIL_USER}>`,
+            from: `Maheshwagh Art <${process.env.EMAIL_USER}>`,
             to: requestData.email,
-            subject: 'We Received Your Custom Sketch Request! - Maheshwar Art',
-            text: `Hi ${requestData.name},\n\nThank you for reaching out to Maheshwar Art Academy!\nI have received your custom sketch request details:\n\n"${requestData.description || 'Custom Request Reference'}"\n\nI will review your request and get back to you with a quote/timeline within 24 hours.\n\nKeep dreaming, stay inspired!\n\nBest,\nMaheshwar Art Team`
+            subject: 'We Received Your Custom Sketch Request! - Maheshwagh Art',
+            text: `Hi ${requestData.name},\n\nThank you for reaching out to Maheshwagh Art Academy!\nI have received your custom sketch request details:\n\n"${requestData.description || 'Custom Request Reference'}"\n\nI will review your request and get back to you with a quote/timeline within 24 hours.\n\nKeep dreaming, stay inspired!\n\nBest,\nMaheshwagh Art Team`
         };
 
         await transporter.sendMail(artistMailOptions);

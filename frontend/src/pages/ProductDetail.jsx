@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Heart, ShieldCheck, Truck, Clock, Sparkles, Star, ZoomIn, Check } from 'lucide-react';
 import { CartContext } from '../context/CartContext';
+import useTrackClick from '../hooks/useTrackClick';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -15,6 +16,7 @@ const ProductDetail = () => {
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
   const [includeFrame, setIncludeFrame] = useState(false);
   const { addToCart } = useContext(CartContext);
+  const trackClick = useTrackClick();
 
   useEffect(() => {
     const fetchSketch = async () => {
@@ -35,6 +37,7 @@ const ProductDetail = () => {
   const derivedFramePrice = derivedFrameType.includes('A3') ? 400 : derivedFrameType.includes('A4') ? 300 : 500;
 
   const handleAddToCart = () => {
+    trackClick('Add to Cart');
     addToCart({
       sketch: sketch._id,
       title: sketch.title,
@@ -58,6 +61,7 @@ const ProductDetail = () => {
   };
 
   const handleBuyNow = () => {
+    trackClick('Buy Now');
     addToCart({
       sketch: sketch._id,
       title: sketch.title,
