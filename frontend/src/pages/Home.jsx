@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Navigation, Autoplay } from 'swiper/modules';
 import OptimizedImage from '../components/OptimizedImage';
+import useTrackClick from '../hooks/useTrackClick';
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
@@ -11,6 +12,7 @@ import "swiper/css/navigation";
 
 const Home = () => {
   const [sketches, setSketches] = useState([]);
+  const trackClick = useTrackClick();
   const [featuredSketches, setFeaturedSketches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -738,6 +740,8 @@ const Home = () => {
                     <OptimizedImage
                       src={sketch.images[0]}
                       alt={sketch.title}
+                      aspectRatio="3/4"
+                      onClick={() => trackClick(`View Featured Artwork - ${sketch.title}`)}
                     />
                   </div>
                   <div className="gallery-info">
@@ -816,7 +820,12 @@ const Home = () => {
                           style={{ display: 'block' }}
                         >
                           <div className="portfolio-img-container">
-                            <OptimizedImage src={sketch.images[0]} alt={sketch.title} />
+                            <OptimizedImage 
+                              src={sketch.images[0]} 
+                              alt={sketch.title} 
+                              aspectRatio="4/5"
+                              onClick={() => trackClick(`View Portfolio Artwork - ${sketch.title}`)}
+                            />
                           </div>
                           <div className="portfolio-info">
                             <h3>{sketch.title}</h3>
