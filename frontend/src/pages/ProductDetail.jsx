@@ -4,6 +4,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Heart, ShieldCheck, Truck, Clock, Sparkles, Star, ZoomIn, Check } from 'lucide-react';
 import { CartContext } from '../context/CartContext';
 import useTrackClick from '../hooks/useTrackClick';
+import OptimizedImage from '../components/OptimizedImage';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -77,9 +78,11 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <div className="product-loading">
-        <div className="spinner"></div>
-        <p>Loading masterpiece details...</p>
+      <div className="product-detail-page" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="product-loading">
+          <div className="spinner"></div>
+          <p>Loading masterpiece details...</p>
+        </div>
       </div>
     );
   }
@@ -110,10 +113,11 @@ const ProductDetail = () => {
                 onMouseLeave={() => setIsZoomed(false)}
                 onMouseMove={handleMouseMove}
               >
-                <img
+                <OptimizedImage
                   src={sketch.images[activeImage]}
                   alt={sketch.title}
                   key={activeImage}
+                  isHero={true}
                   className="fade-in"
                   style={{
                     transformOrigin: `${mousePos.x}% ${mousePos.y}%`,
@@ -135,7 +139,7 @@ const ProductDetail = () => {
                     className={`thumbnail ${activeImage === idx ? 'active' : ''}`}
                     onClick={() => setActiveImage(idx)}
                   >
-                    <img src={img} alt={`${sketch.title} ${idx + 1}`} />
+                    <OptimizedImage src={img} alt={`${sketch.title} ${idx + 1}`} />
                   </button>
                 ))}
               </div>

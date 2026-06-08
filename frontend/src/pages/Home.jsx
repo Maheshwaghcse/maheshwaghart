@@ -1,8 +1,9 @@
 // Home.jsx (with moving blurred background)
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCoverflow, Navigation, Autoplay } from 'swiper/modules';
+import OptimizedImage from '../components/OptimizedImage';
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
@@ -524,10 +525,9 @@ const Home = () => {
             {sketches.length > 0 ? (
               sketches.slice(0, 8).map((sketch, idx) => (
                 <div key={idx} style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-                  <img
+                  <OptimizedImage
                     src={sketch.images?.[0]}
                     alt=""
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>
               ))
@@ -558,10 +558,9 @@ const Home = () => {
             }}>
               {sketches.slice(0, 8).map((sketch, idx) => (
                 <div key={idx} style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-                  <img
+                  <OptimizedImage
                     src={sketch.images?.[0]}
                     alt=""
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>
               ))}
@@ -642,10 +641,9 @@ const Home = () => {
                 >
                   <div className="mat-board" style={{ padding: config.matWidth }}>
                     <div className="sketch-wrapper">
-                      <img
+                      <OptimizedImage
                         src={sketchImg}
                         alt=""
-                        loading="lazy"
                       />
                     </div>
                   </div>
@@ -737,13 +735,9 @@ const Home = () => {
               featuredSketches.map((sketch) => (
                 <Link to={`/product/${sketch._id}`} key={sketch._id} className="gallery-item">
                   <div className="gallery-img-wrapper">
-                    <img
+                    <OptimizedImage
                       src={sketch.images[0]}
                       alt={sketch.title}
-                      loading="lazy"
-                      decoding="async"
-                      width="400"
-                      height="533"
                     />
                   </div>
                   <div className="gallery-info">
@@ -822,7 +816,7 @@ const Home = () => {
                           style={{ display: 'block' }}
                         >
                           <div className="portfolio-img-container">
-                            <img src={sketch.images[0]} alt={sketch.title} />
+                            <OptimizedImage src={sketch.images[0]} alt={sketch.title} />
                           </div>
                           <div className="portfolio-info">
                             <h3>{sketch.title}</h3>
@@ -876,7 +870,7 @@ const Home = () => {
                   className="viral-card"
                   style={{ display: 'block' }}
                 >
-                  <img src={post.img} alt="Instagram Sketch" />
+                  <OptimizedImage src={post.img} alt={`Live Sketch ${i + 1}`} />
 
                   <div className="instagram-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

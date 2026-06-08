@@ -46,7 +46,6 @@ const OptimizedImage = ({
   src,
   alt = 'Maheshwagh Art Piece',
   isHero = false,
-  basePath = '/images/',
   className = '',
   style = {},
   ...props
@@ -54,23 +53,9 @@ const OptimizedImage = ({
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
-  // Ensure basePath has a trailing slash
-  const cleanBasePath = basePath ? (basePath.endsWith('/') ? basePath : `${basePath}/`) : '/images/';
-
-  // Clean src by removing file extension if user accidentally passed one
-  const cleanSrc = src ? src.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '') : '';
-
-  if (!cleanSrc) {
+  if (!src) {
     return null;
   }
-
-  // Paths
-  const webpSrcSet = `${cleanBasePath}${cleanSrc}-400.webp 400w, ${cleanBasePath}${cleanSrc}-800.webp 800w, ${cleanBasePath}${cleanSrc}-1200.webp 1200w`;
-  const jpgSrcSet = `${cleanBasePath}${cleanSrc}-400.jpg 400w, ${cleanBasePath}${cleanSrc}-800.jpg 800w, ${cleanBasePath}${cleanSrc}-1200.jpg 1200w`;
-  const fallbackSrc = `${cleanBasePath}${cleanSrc}.jpg`;
-
-  // Breakpoints sizes attribute
-  const sizesAttr = '(max-width: 480px) 400px, (max-width: 1024px) 800px, 1200px';
 
   return (
     <div
@@ -91,9 +76,9 @@ const OptimizedImage = ({
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(189,0,255,0.06) 50%, rgba(255,255,255,0) 100%)',
+            background: 'linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(189,0,255,0.08) 50%, rgba(255,255,255,0.02) 100%)',
             backgroundSize: '200% 100%',
-            animation: 'shimmer-pulse 1.8s infinite linear',
+            animation: 'shimmer-pulse 1.5s infinite linear',
             zIndex: 1,
           }}
         />
@@ -120,41 +105,26 @@ const OptimizedImage = ({
           <span>Failed to load image</span>
         </div>
       ) : (
-        <picture style={{ display: 'block', width: '100%', height: '100%' }}>
-          {/* WebP responsive source */}
-          <source
-            type="image/webp"
-            srcSet={webpSrcSet}
-            sizes={sizesAttr}
-          />
-          {/* JPG responsive fallback source */}
-          <source
-            type="image/jpeg"
-            srcSet={jpgSrcSet}
-            sizes={sizesAttr}
-          />
-          {/* Img element */}
-          <img
-            src={fallbackSrc}
-            alt={alt}
-            loading={isHero ? 'eager' : 'lazy'}
-            fetchPriority={isHero ? 'high' : 'auto'}
-            onLoad={() => setLoaded(true)}
-            onError={() => {
-              setError(true);
-              setLoaded(true);
-            }}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              opacity: loaded ? 1 : 0,
-              transition: 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-              display: 'block',
-            }}
-            {...props}
-          />
-        </picture>
+        <img
+          src={src}
+          alt={alt}
+          loading={isHero ? 'eager' : 'lazy'}
+          fetchPriority={isHero ? 'high' : 'auto'}
+          onLoad={() => setLoaded(true)}
+          onError={() => {
+            setError(true);
+            setLoaded(true);
+          }}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out',
+            display: 'block',
+          }}
+          {...props}
+        />
       )}
 
       <style>{`
