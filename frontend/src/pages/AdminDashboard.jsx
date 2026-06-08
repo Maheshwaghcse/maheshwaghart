@@ -6,8 +6,6 @@ import {
   Plus, Trash2, LayoutDashboard, Image as ImageIcon, Layers, X, AlertCircle, Sparkles,
   Eye, Users, MousePointer, UserCheck, Activity, BarChart2 
 } from 'lucide-react';
-import * as Recharts from 'recharts';
-const { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } = Recharts;
 
 const AdminDashboard = () => {
   const { userInfo } = useContext(AuthContext);
@@ -503,48 +501,8 @@ const AdminDashboard = () => {
                       No click interaction data recorded yet.
                     </div>
                   ) : (
-                    <div style={{ width: '100%', height: 350 }}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={stats.clickCounts}
-                          margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                          <XAxis 
-                            dataKey="name" 
-                            stroke="var(--text-muted, #d4c0d7)" 
-                            tick={{ fill: 'var(--text-muted, #d4c0d7)', fontSize: 11 }}
-                            dy={10}
-                          />
-                          <YAxis 
-                            stroke="var(--text-muted, #d4c0d7)" 
-                            tick={{ fill: 'var(--text-muted, #d4c0d7)', fontSize: 11 }}
-                            allowDecimals={false}
-                          />
-                          <Tooltip
-                            contentStyle={{
-                              background: 'rgba(23, 15, 30, 0.95)',
-                              border: '1px solid var(--border-color, rgba(255,255,255,0.1))',
-                              borderRadius: '0.75rem',
-                              color: '#fff',
-                            }}
-                            cursor={{ fill: 'rgba(189, 0, 255, 0.05)' }}
-                          />
-                          <Bar 
-                            dataKey="count" 
-                            fill="url(#colorBarGrad)" 
-                            radius={[6, 6, 0, 0]}
-                            maxBarSize={50}
-                          >
-                            <defs>
-                              <linearGradient id="colorBarGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#bd00ff" stopOpacity={0.9} />
-                                <stop offset="95%" stopColor="#ff36c8" stopOpacity={0.6} />
-                              </linearGradient>
-                            </defs>
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
+                    <div style={{ width: '100%', height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '0.5rem' }}>
+                      <p style={{ color: 'var(--text-muted)' }}>[Chart temporarily disabled for debugging]</p>
                     </div>
                   )}
                 </div>
