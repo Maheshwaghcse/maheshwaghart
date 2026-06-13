@@ -13,6 +13,10 @@ const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Please provide name, email and password' });
+        }
+
         const userExists = await User.findOne({ email });
 
         if (userExists) {
@@ -33,7 +37,7 @@ const registerUser = async (req, res) => {
                 message: `A new user has registered on your website.\n\nDetails:\nUID: ${user.uid}\nName: ${user.name}\nEmail: ${user.email}\nRole: ${user.role}\nRegistered At: ${new Date().toLocaleString()}`
             }).catch(err => console.error('Error sending registration email alert:', err));
 
-            // Log visitor registration action
+            // Log visitor registration action (non-blocking)
             try {
                 const Visitor = (await import('../models/Visitor.js')).default;
                 const visitor = new Visitor({
@@ -46,7 +50,7 @@ const registerUser = async (req, res) => {
                 });
                 await visitor.save();
             } catch (visErr) {
-                console.error('Failed to log visitor registration:', visErr);
+                console.error('Failed to log visitor registration:', visErr.message);
             }
 
             res.status(201).json({
@@ -61,6 +65,7 @@ const registerUser = async (req, res) => {
             res.status(400).json({ message: 'Invalid user data' });
         }
     } catch (error) {
+        console.error('REGISTER ERROR:', error.message, error.stack);
         res.status(500).json({ message: error.message });
     }
 };
@@ -72,11 +77,12 @@ const authUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (user && (await user.matchPassword(password))) {
-            // Assign UID if missing (for existing users)
+            // Assign UID if missing — use updateOne to AVOID triggering pre-save (password re-hash)
             if (!user.uid) {
                 const count = await User.countDocuments();
-                user.uid = `U-${String(count + 1).padStart(3, '0')}`;
-                await user.save();
+                const newUid = `U-${String(count + 1).padStart(3, '0')}`;
+                await User.updateOne({ _id: user._id }, { $set: { uid: newUid } });
+                user.uid = newUid;
             }
 
             // Send login email to admin (fire-and-forget)
@@ -99,7 +105,7 @@ const authUser = async (req, res) => {
                 });
                 await visitor.save();
             } catch (visErr) {
-                console.error('Failed to log visitor login:', visErr);
+                console.error('Failed to log visitor login:', visErr.message);
             }
 
             res.json({
@@ -114,6 +120,7 @@ const authUser = async (req, res) => {
             res.status(401).json({ message: 'Invalid email or password' });
         }
     } catch (error) {
+        console.error('LOGIN ERROR:', error.message, error.stack);
         res.status(500).json({ message: error.message });
     }
 };
