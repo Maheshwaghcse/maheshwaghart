@@ -35,7 +35,7 @@ const ProductDetail = () => {
   }, [id]);
 
   const derivedFrameType = sketch?.size || 'A4';
-  const derivedFramePrice = derivedFrameType.includes('A3') ? 400 : derivedFrameType.includes('A4') ? 300 : 500;
+  const derivedFramePrice = derivedFrameType.includes('A3') ? 300 : derivedFrameType.includes('A4') ? 500 : 500;
 
   const handleAddToCart = () => {
     trackClick('Add to Cart');
