@@ -1853,7 +1853,167 @@ const AdminDashboard = () => {
             box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
           }
         }
+        @keyframes slideUp {
+          from { transform: translateY(30px); opacity: 0; }
+          to   { transform: translateY(0);   opacity: 1; }
+        }
       `}</style>
+
+      {/* ══════════ User Detail Modal ══════════ */}
+      {(selectedUserInsight || insightLoading) && (
+        <div
+          onClick={() => setSelectedUserInsight(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 1000,
+            background: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '1rem',
+            animation: 'fadeIn 0.2s ease'
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: 'linear-gradient(145deg, #1a0a2e 0%, #12001f 100%)',
+              border: '1px solid rgba(189,0,255,0.25)',
+              borderRadius: '1.5rem',
+              width: '100%',
+              maxWidth: '780px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: '0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(189,0,255,0.1)',
+              animation: 'slideUp 0.3s ease'
+            }}
+          >
+            {insightLoading ? (
+              <div style={{ padding: '5rem', textAlign: 'center' }}>
+                <div className="spinner" />
+                <p style={{ color: 'var(--text-muted)', marginTop: '1rem' }}>Loading user profile...</p>
+              </div>
+            ) : selectedUserInsight && (() => {
+              const { user, activities } = selectedUserInsight;
+              const totalLogins = activities.filter(a => a.action === 'login').length;
+              const totalVisits = activities.filter(a => a.action === 'visit').length;
+              const totalRegisters = activities.filter(a => a.action === 'register').length;
+              const totalClicks = activities.filter(a => !['login','visit','register','custom_request'].includes(a.action)).length;
+              const lastSeen = activities[0]?.visitedAt;
+              return (
+                <>
+                  {/* Header */}
+                  <div style={{
+                    padding: '2rem 2rem 1.5rem',
+                    borderBottom: '1px solid rgba(255,255,255,0.07)',
+                    display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                      {/* Avatar circle */}
+                      <div style={{
+                        width: '64px', height: '64px', borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #bd00ff 0%, #ff36c8 100%)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: '1.5rem', fontWeight: 800, color: '#fff', flexShrink: 0,
+                        boxShadow: '0 0 20px rgba(189,0,255,0.4)'
+                      }}>
+                        {user.name?.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                          <h2 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 800 }}>{user.name}</h2>
+                          {user.role === 'admin' && (
+                            <span style={{ fontSize: '0.65rem', background: 'rgba(234,179,8,0.15)', color: '#eab308', padding: '0.2rem 0.6rem', borderRadius: '20px', fontWeight: 700, border: '1px solid rgba(234,179,8,0.3)' }}>ADMIN</span>
+                          )}
+                          <span style={{ fontSize: '0.7rem', background: 'rgba(189,0,255,0.12)', color: '#bd00ff', padding: '0.2rem 0.6rem', borderRadius: '20px', fontWeight: 700, border: '1px solid rgba(189,0,255,0.25)' }}>{user.uid || 'No UID'}</span>
+                        </div>
+                        <p style={{ margin: '0.25rem 0 0', color: 'var(--text-muted)', fontSize: '0.875rem' }}>{user.email}</p>
+                        {lastSeen && <p style={{ margin: '0.15rem 0 0', color: 'var(--text-muted)', fontSize: '0.75rem' }}>Last seen: {new Date(lastSeen).toLocaleString()}</p>}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setSelectedUserInsight(null)}
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff', fontSize: '1rem', flexShrink: 0 }}
+                    >✕</button>
+                  </div>
+
+                  {/* Profile Info + Stats */}
+                  <div style={{ padding: '1.5rem 2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+                    {/* Info Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '1rem' }}>
+                      {[
+                        { label: 'Phone', value: user.phone || '—', icon: '📞' },
+                        { label: 'Address', value: user.address || '—', icon: '📍' },
+                        { label: 'Joined', value: new Date(user.createdAt).toLocaleDateString(), icon: '📅' },
+                        { label: 'Role', value: user.role?.toUpperCase(), icon: '🔑' },
+                      ].map(item => (
+                        <div key={item.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '0.875rem', padding: '0.85rem 1rem' }}>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.3rem' }}>{item.icon} {item.label}</div>
+                          <div style={{ fontWeight: 600, fontSize: '0.875rem', color: '#e8d8ff', wordBreak: 'break-word' }}>{item.value}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Activity Summary Cards */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
+                      {[
+                        { label: 'Total Events', value: activities.length, color: '#bd00ff', bg: 'rgba(189,0,255,0.1)' },
+                        { label: 'Page Visits', value: totalVisits, color: '#10b981', bg: 'rgba(16,185,129,0.1)' },
+                        { label: 'Logins', value: totalLogins, color: '#36a2eb', bg: 'rgba(54,162,235,0.1)' },
+                        { label: 'Clicks', value: totalClicks, color: '#ff36c8', bg: 'rgba(255,54,200,0.1)' },
+                      ].map(s => (
+                        <div key={s.label} style={{ background: s.bg, border: `1px solid ${s.color}33`, borderRadius: '0.875rem', padding: '0.85rem', textAlign: 'center' }}>
+                          <div style={{ fontSize: '1.4rem', fontWeight: 800, color: s.color }}>{s.value}</div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>{s.label}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Activity Timeline */}
+                    <div>
+                      <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>📋 Activity Timeline ({activities.length} events)</h3>
+                      {activities.length === 0 ? (
+                        <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>No activity recorded for this user.</p>
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '340px', overflowY: 'auto', paddingRight: '0.25rem' }}>
+                          {activities.map((act, idx) => {
+                            const isLogin = act.action === 'login';
+                            const isVisit = act.action === 'visit';
+                            const isRegister = act.action === 'register';
+                            const isCR = act.action === 'custom_request';
+                            const badgeColor = isLogin ? '#36a2eb' : isVisit ? '#10b981' : isRegister ? '#ec4899' : isCR ? '#eab308' : '#ff36c8';
+                            const badgeBg = isLogin ? 'rgba(54,162,235,0.12)' : isVisit ? 'rgba(16,185,129,0.12)' : isRegister ? 'rgba(236,72,153,0.12)' : isCR ? 'rgba(234,179,8,0.12)' : 'rgba(255,54,200,0.12)';
+                            const badgeLabel = isLogin ? '🔑 Login' : isVisit ? '👁 Visit' : isRegister ? '✅ Register' : isCR ? '🎨 Custom Req' : `🖱 ${act.action}`;
+                            return (
+                              <div key={act._id || idx} style={{
+                                display: 'flex', alignItems: 'center', gap: '0.75rem',
+                                background: 'rgba(255,255,255,0.02)',
+                                border: '1px solid rgba(255,255,255,0.04)',
+                                borderRadius: '0.75rem', padding: '0.65rem 0.85rem'
+                              }}>
+                                <span style={{ background: badgeBg, color: badgeColor, padding: '0.2rem 0.6rem', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 700, whiteSpace: 'nowrap', minWidth: '100px', textAlign: 'center', border: `1px solid ${badgeColor}33` }}>
+                                  {badgeLabel}
+                                </span>
+                                <code style={{ color: '#bd00ff', fontSize: '0.78rem', background: 'rgba(189,0,255,0.05)', padding: '0.15rem 0.4rem', borderRadius: '4px', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  {act.page}
+                                </code>
+                                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                                  {new Date(act.visitedAt).toLocaleString()}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
