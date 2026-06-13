@@ -106,10 +106,16 @@ const AdminDashboard = () => {
     try {
       const res = await fetch(`${API_BASE}/api/sketches`);
       const data = await res.json();
-      setSketches(data);
+      if (Array.isArray(data)) {
+        setSketches(data);
+      } else {
+        setSketches([]);
+        setError(data.message || 'Failed to load collection');
+      }
     } catch (err) {
       console.error('Failed to fetch sketches:', err);
       setError('Failed to load collection');
+      setSketches([]);
     } finally {
       setLoading(false);
     }

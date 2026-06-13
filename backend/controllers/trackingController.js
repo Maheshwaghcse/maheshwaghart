@@ -191,14 +191,25 @@ export const getAdminUsers = async (req, res) => {
     try {
         const users = await User.find().select('-password').sort({ createdAt: -1 });
         
-        const usersWithStats = await Promise.all(users.map(async (u) => {
-            // Assign UID if missing (legacy backfill)
+        // 1. Assign UIDs sequentially to any legacy users missing them (avoids race condition/duplicate key errors in Promise.all)
+        for (const u of users) {
             if (!u.uid) {
                 const count = await User.countDocuments({ uid: { $exists: true } });
                 u.uid = `U-${String(count + 1).padStart(3, '0')}`;
-                await u.save();
+                try {
+                    await u.save();
+                } catch (saveErr) {
+                    // In case of any concurrent collision/duplicate, fetch updated count and retry once
+                    console.error(`Collision/error saving UID U-${count + 1} for ${u.email}:`, saveErr.message);
+                    const freshCount = await User.countDocuments({ uid: { $exists: true } });
+                    u.uid = `U-${String(freshCount + 1).padStart(3, '0')}`;
+                    await u.save();
+                }
             }
+        }
 
+        // 2. Fetch visitor analytics stats for all users concurrently
+        const usersWithStats = await Promise.all(users.map(async (u) => {
             const totalActions = await Visitor.countDocuments({ userId: u._id });
             const lastAction = await Visitor.findOne({ userId: u._id }).sort({ visitedAt: -1 });
 
