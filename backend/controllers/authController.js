@@ -26,11 +26,35 @@ const registerUser = async (req, res) => {
         });
 
         if (user) {
+            // Send register email to admin (fire-and-forget)
+            sendEmail({
+                email: 'maheshwaghcse@gmail.com',
+                subject: `[Maheshwagh Art] New User Registered: ${user.name}`,
+                message: `A new user has registered on your website.\n\nDetails:\nUID: ${user.uid}\nName: ${user.name}\nEmail: ${user.email}\nRole: ${user.role}\nRegistered At: ${new Date().toLocaleString()}`
+            }).catch(err => console.error('Error sending registration email alert:', err));
+
+            // Log visitor registration action
+            try {
+                const Visitor = (await import('../models/Visitor.js')).default;
+                const visitor = new Visitor({
+                    userId: user._id,
+                    isGuest: false,
+                    action: 'register',
+                    page: '/register',
+                    ip: req.ip || req.headers['x-forwarded-for'] || 'unknown',
+                    userAgent: req.headers['user-agent'] || 'unknown',
+                });
+                await visitor.save();
+            } catch (visErr) {
+                console.error('Failed to log visitor registration:', visErr);
+            }
+
             res.status(201).json({
                 _id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                uid: user.uid,
                 token: generateToken(user._id, user.role),
             });
         } else {
@@ -48,11 +72,42 @@ const authUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (user && (await user.matchPassword(password))) {
+            // Assign UID if missing (for existing users)
+            if (!user.uid) {
+                const count = await User.countDocuments();
+                user.uid = `U-${String(count + 1).padStart(3, '0')}`;
+                await user.save();
+            }
+
+            // Send login email to admin (fire-and-forget)
+            sendEmail({
+                email: 'maheshwaghcse@gmail.com',
+                subject: `[Maheshwagh Art] User Login: ${user.name}`,
+                message: `A user has logged in to your website.\n\nDetails:\nUID: ${user.uid}\nName: ${user.name}\nEmail: ${user.email}\nRole: ${user.role}\nLogin At: ${new Date().toLocaleString()}`
+            }).catch(err => console.error('Error sending login email alert:', err));
+
+            // Log visitor login action
+            try {
+                const Visitor = (await import('../models/Visitor.js')).default;
+                const visitor = new Visitor({
+                    userId: user._id,
+                    isGuest: false,
+                    action: 'login',
+                    page: '/login',
+                    ip: req.ip || req.headers['x-forwarded-for'] || 'unknown',
+                    userAgent: req.headers['user-agent'] || 'unknown',
+                });
+                await visitor.save();
+            } catch (visErr) {
+                console.error('Failed to log visitor login:', visErr);
+            }
+
             res.json({
                 _id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                uid: user.uid,
                 token: generateToken(user._id, user.role),
             });
         } else {

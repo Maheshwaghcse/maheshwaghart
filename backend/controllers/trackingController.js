@@ -1,4 +1,6 @@
 import Visitor from '../models/Visitor.js';
+import User from '../models/User.js';
+import CustomRequest from '../models/CustomRequest.js';
 
 /**
  * Track a page visit
@@ -70,24 +72,47 @@ export const trackClick = async (req, res) => {
  */
 export const getAdminStats = async (req, res) => {
     try {
-        // 1. Total page visits
-        const totalVisits = await Visitor.countDocuments({ action: 'visit' });
+        const { days } = req.query;
 
-        // 2. Logged-in user page visits
-        const loggedInVisits = await Visitor.countDocuments({ action: 'visit', isGuest: false });
+        // Build date filter based on time slicer
+        let dateFilter = {};
+        if (days && days !== 'all') {
+            const daysNum = parseInt(days, 10);
+            if (!isNaN(daysNum)) {
+                const cutoff = new Date();
+                cutoff.setDate(cutoff.getDate() - daysNum);
+                dateFilter = { visitedAt: { $gte: cutoff } };
+            }
+        }
 
-        // 3. Guest page visits
-        const guestVisits = await Visitor.countDocuments({ action: 'visit', isGuest: true });
+        // 1. Visit Stats within filtered window
+        const totalVisits = await Visitor.countDocuments({ ...dateFilter, action: 'visit' });
+        const loggedInVisits = await Visitor.countDocuments({ ...dateFilter, action: 'visit', isGuest: false });
+        const guestVisits = await Visitor.countDocuments({ ...dateFilter, action: 'visit', isGuest: true });
 
-        // 4. Unique users (based on distinct user ID, excluding guests)
-        const uniqueUsers = (await Visitor.distinct('userId', { isGuest: false, userId: { $ne: null } })).length;
+        // 2. User Accounts Count (Independent of dateFilter so admin sees total, or can filter by date if desired, but total is better)
+        const totalUsers = await User.countDocuments();
 
-        // 5. Unique guests (based on distinct guest ID)
-        const uniqueGuests = (await Visitor.distinct('guestId', { isGuest: true, guestId: { $ne: null } })).length;
+        // 3. Active Users (logged in within last 30 minutes)
+        const activeCutoff = new Date(Date.now() - 30 * 60 * 1000);
+        const activeUsersCount = (await Visitor.distinct('userId', {
+            userId: { $ne: null },
+            visitedAt: { $gte: activeCutoff }
+        })).length;
 
-        // 6. Clicks grouped by action
+        // 4. Action Event Counts (filtered by date window)
+        const totalLogins = await Visitor.countDocuments({ ...dateFilter, action: 'login' });
+        const totalRegisters = await Visitor.countDocuments({ ...dateFilter, action: 'register' });
+        const totalCustomRequests = await CustomRequest.countDocuments(dateFilter);
+
+        // 5. Clicks grouped by action
         const clickCounts = await Visitor.aggregate([
-            { $match: { action: { $ne: 'visit' } } },
+            { 
+                $match: { 
+                    ...dateFilter, 
+                    action: { $nin: ['visit', 'login', 'register', 'custom_request'] } 
+                } 
+            },
             { $group: { _id: '$action', count: { $sum: 1 } } },
             { $sort: { count: -1 } }
         ]);
@@ -97,23 +122,143 @@ export const getAdminStats = async (req, res) => {
             count: item.count
         }));
 
-        // 7. Recent visits (last 10)
-        const recentVisits = await Visitor.find()
+        // 6. Recent visits/actions (last 100)
+        const recentVisits = await Visitor.find(dateFilter)
             .sort({ visitedAt: -1 })
-            .limit(10)
-            .populate('userId', 'name email');
+            .limit(100)
+            .populate('userId', 'name email uid');
+
+        // 7. Historical Chart Data (daily visits/actions in the filtered range)
+        let chartDays = 7;
+        if (days && days !== 'all') {
+            const parsedDays = parseInt(days, 10);
+            if (!isNaN(parsedDays)) chartDays = parsedDays;
+        } else if (days === 'all') {
+            chartDays = 30; // default to 30 days for chart if all time
+        }
+
+        const chartData = [];
+        for (let i = chartDays - 1; i >= 0; i--) {
+            const start = new Date();
+            start.setHours(0, 0, 0, 0);
+            start.setDate(start.getDate() - i);
+
+            const end = new Date();
+            end.setHours(23, 59, 59, 999);
+            end.setDate(end.getDate() - i);
+
+            const visitsCount = await Visitor.countDocuments({
+                action: 'visit',
+                visitedAt: { $gte: start, $lte: end }
+            });
+
+            const actionCount = await Visitor.countDocuments({
+                action: { $ne: 'visit' },
+                visitedAt: { $gte: start, $lte: end }
+            });
+
+            chartData.push({
+                date: start.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+                visits: visitsCount,
+                actions: actionCount
+            });
+        }
 
         return res.status(200).json({
             totalVisits,
             loggedInVisits,
             guestVisits,
-            uniqueUsers,
-            uniqueGuests,
+            totalUsers,
+            activeUsers: activeUsersCount,
+            totalLogins,
+            totalRegisters,
+            totalCustomRequests,
             clickCounts: formattedClicks,
-            recentVisits
+            recentVisits,
+            chartData
         });
     } catch (error) {
         console.error('Error in getAdminStats controller:', error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+/**
+ * Retrieve all registered users with activity stats
+ * GET /api/admin/users
+ */
+export const getAdminUsers = async (req, res) => {
+    try {
+        const users = await User.find().select('-password').sort({ createdAt: -1 });
+        
+        const usersWithStats = await Promise.all(users.map(async (u) => {
+            // Assign UID if missing (legacy backfill)
+            if (!u.uid) {
+                const count = await User.countDocuments({ uid: { $exists: true } });
+                u.uid = `U-${String(count + 1).padStart(3, '0')}`;
+                await u.save();
+            }
+
+            const totalActions = await Visitor.countDocuments({ userId: u._id });
+            const lastAction = await Visitor.findOne({ userId: u._id }).sort({ visitedAt: -1 });
+
+            return {
+                _id: u._id,
+                uid: u.uid,
+                name: u.name,
+                email: u.email,
+                role: u.role,
+                phone: u.phone,
+                address: u.address,
+                createdAt: u.createdAt,
+                totalActions,
+                lastActive: lastAction ? lastAction.visitedAt : null
+            };
+        }));
+
+        return res.status(200).json(usersWithStats);
+    } catch (error) {
+        console.error('Error in getAdminUsers controller:', error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+/**
+ * Retrieve insights for a single user (detailed activity log)
+ * GET /api/admin/users/:id/insight
+ */
+export const getUserInsight = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const activities = await Visitor.find({ userId })
+            .sort({ visitedAt: -1 })
+            .limit(100);
+
+        return res.status(200).json({
+            user,
+            activities
+        });
+    } catch (error) {
+        console.error('Error in getUserInsight controller:', error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+/**
+ * Retrieve all custom requests
+ * GET /api/admin/custom-requests
+ */
+export const getAdminCustomRequests = async (req, res) => {
+    try {
+        const requests = await CustomRequest.find().sort({ createdAt: -1 });
+        return res.status(200).json(requests);
+    } catch (error) {
+        console.error('Error in getAdminCustomRequests controller:', error);
         return res.status(500).json({ message: error.message });
     }
 };
