@@ -2,9 +2,10 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { 
+import {
   Plus, Trash2, LayoutDashboard, Image as ImageIcon, Layers, X, AlertCircle, Sparkles,
-  Eye, Users, MousePointer, UserCheck, Activity, BarChart2, Mail, ChevronRight, Search, ExternalLink
+  Eye, Users, MousePointer, UserCheck, Activity, BarChart2, Mail, ChevronRight, Search, ExternalLink,
+  Clock
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -547,7 +548,7 @@ const AdminDashboard = () => {
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', width: '100%' }}>
-                
+
                 {/* ── Time Slicer ── */}
                 <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
@@ -579,7 +580,7 @@ const AdminDashboard = () => {
 
                 {/* ── KPI Stat Cards ── */}
                 <div className="analytics-stats-grid">
-                  
+
                   {/* Card 1: Total Visits */}
                   <div className="analytics-card">
                     <div className="card-icon-wrapper" style={{ background: 'rgba(189, 0, 255, 0.15)', color: '#bd00ff' }}>
@@ -675,7 +676,7 @@ const AdminDashboard = () => {
 
                 {/* ── Charts Section ── */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
-                  
+
                   {/* Chart 1: Activity Trends */}
                   <div className="card" style={{ padding: '2rem' }}>
                     <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -773,7 +774,7 @@ const AdminDashboard = () => {
                     <MousePointer className="text-primary" />
                     Top Clicked Buttons & Taps
                   </h3>
-                  
+
                   {stats.clickCounts.length === 0 ? (
                     <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
                       No button click interaction data recorded.
@@ -810,7 +811,7 @@ const AdminDashboard = () => {
                       <Activity className="text-primary" />
                       Recent Activity Timeline
                     </h3>
-                    
+
                     {/* Action Filter Slicer */}
                     <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
                       {[
@@ -861,7 +862,7 @@ const AdminDashboard = () => {
                         <tbody>
                           {filteredVisits.map((visit) => {
                             const isGuest = visit.isGuest;
-                            const userText = isGuest 
+                            const userText = isGuest
                               ? `Guest (${visit.guestId ? visit.guestId.substring(0, 8) : 'unknown'}...)`
                               : visit.userId?.name || 'Registered User';
                             const userSub = isGuest
@@ -873,7 +874,7 @@ const AdminDashboard = () => {
                                 <td style={{ padding: '1rem' }}>
                                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                                     {!isGuest && visit.userId?._id ? (
-                                      <span 
+                                      <span
                                         onClick={() => fetchUserInsight(visit.userId._id)}
                                         style={{ fontWeight: 600, fontSize: '0.9rem', color: '#ecb2ff', cursor: 'pointer', textDecoration: 'underline' }}
                                         title="Click to view user insight"
@@ -954,7 +955,7 @@ const AdminDashboard = () => {
                   <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Registered User Directory</h2>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: '0.25rem 0 0 0' }}>Assigns unique UIDs to track specific user journeys.</p>
                 </div>
-                
+
                 {/* Search Slicer */}
                 <div style={{ position: 'relative', minWidth: '280px' }}>
                   <input
@@ -975,9 +976,9 @@ const AdminDashboard = () => {
                   <p style={{ color: 'var(--text-muted)', marginTop: '1rem' }}>Loading user directory...</p>
                 </div>
               ) : (() => {
-                const filteredUsers = usersList.filter(u => 
-                  u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                  u.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                const filteredUsers = usersList.filter(u =>
+                  u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
                   (u.uid && u.uid.toLowerCase().includes(searchQuery.toLowerCase()))
                 );
 
@@ -1089,9 +1090,9 @@ const AdminDashboard = () => {
                                       }}
                                     />
                                   ) : null}
-                                  <a 
-                                    href={reqItem.referenceUrl.startsWith('/') ? `${API_BASE}${reqItem.referenceUrl}` : reqItem.referenceUrl} 
-                                    target="_blank" 
+                                  <a
+                                    href={reqItem.referenceUrl.startsWith('/') ? `${API_BASE}${reqItem.referenceUrl}` : reqItem.referenceUrl}
+                                    target="_blank"
                                     rel="noreferrer"
                                     style={{ color: '#ff36c8', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}
                                   >
@@ -1509,7 +1510,7 @@ const AdminDashboard = () => {
                 <div>
                   <span className="gallery-badge" style={{ marginBottom: '0.5rem' }}>User Insight Logs</span>
                   <h2 style={{ fontSize: '1.75rem', margin: '0.25rem 0 0.5rem 0' }}>
-                    {selectedUserInsight.user.name} 
+                    {selectedUserInsight.user.name}
                     <span style={{ color: 'var(--primary-color)', marginLeft: '0.5rem', fontSize: '1.1rem' }}>
                       ({selectedUserInsight.user.uid || 'Legacy User'})
                     </span>
@@ -1558,24 +1559,24 @@ const AdminDashboard = () => {
                               width: '32px',
                               height: '32px',
                               borderRadius: '50%',
-                              background: act.action === 'visit' 
-                                ? 'rgba(16, 185, 129, 0.15)' 
-                                : act.action === 'login' 
-                                ? 'rgba(54, 162, 235, 0.15)' 
-                                : act.action === 'register' 
-                                ? 'rgba(236, 72, 153, 0.15)' 
-                                : act.action === 'custom_request' 
-                                ? 'rgba(234, 179, 8, 0.15)' 
-                                : 'rgba(255, 54, 200, 0.15)',
-                              color: act.action === 'visit' 
-                                ? '#10b981' 
-                                : act.action === 'login' 
-                                ? '#36a2eb' 
-                                : act.action === 'register' 
-                                ? '#ec4899' 
-                                : act.action === 'custom_request' 
-                                ? '#eab308' 
-                                : '#ff36c8',
+                              background: act.action === 'visit'
+                                ? 'rgba(16, 185, 129, 0.15)'
+                                : act.action === 'login'
+                                  ? 'rgba(54, 162, 235, 0.15)'
+                                  : act.action === 'register'
+                                    ? 'rgba(236, 72, 153, 0.15)'
+                                    : act.action === 'custom_request'
+                                      ? 'rgba(234, 179, 8, 0.15)'
+                                      : 'rgba(255, 54, 200, 0.15)',
+                              color: act.action === 'visit'
+                                ? '#10b981'
+                                : act.action === 'login'
+                                  ? '#36a2eb'
+                                  : act.action === 'register'
+                                    ? '#ec4899'
+                                    : act.action === 'custom_request'
+                                      ? '#eab308'
+                                      : '#ff36c8',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -1594,15 +1595,15 @@ const AdminDashboard = () => {
 
                             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                               <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>
-                                {act.action === 'visit' 
-                                  ? `Visited Page: ${act.page}` 
-                                  : act.action === 'login' 
-                                  ? `Logged in to platform`
-                                  : act.action === 'register' 
-                                  ? `Registered new user account` 
-                                  : act.action === 'custom_request'
-                                  ? `Submitted a custom sketch commission request`
-                                  : `Clicked Interaction Element: "${act.action}"`}
+                                {act.action === 'visit'
+                                  ? `Visited Page: ${act.page}`
+                                  : act.action === 'login'
+                                    ? `Logged in to platform`
+                                    : act.action === 'register'
+                                      ? `Registered new user account`
+                                      : act.action === 'custom_request'
+                                        ? `Submitted a custom sketch commission request`
+                                        : `Clicked Interaction Element: "${act.action}"`}
                               </span>
                               <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                                 <span>IP: {act.ip}</span>
