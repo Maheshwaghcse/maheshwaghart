@@ -79,10 +79,21 @@ const authUser = async (req, res) => {
         if (user && (await user.matchPassword(password))) {
             // Assign UID if missing — use updateOne to AVOID triggering pre-save (password re-hash)
             if (!user.uid) {
-                const count = await User.countDocuments();
-                const newUid = `U-${String(count + 1).padStart(3, '0')}`;
-                await User.updateOne({ _id: user._id }, { $set: { uid: newUid } });
-                user.uid = newUid;
+                let assignedUid = null;
+                let attempts = 0;
+                while (attempts < 10) {
+                    const base = await User.countDocuments({ uid: { $exists: true, $ne: null } });
+                    const candidate = `U-${String(base + 1 + attempts).padStart(3, '0')}`;
+                    const conflict = await User.findOne({ uid: candidate }).lean();
+                    if (!conflict) {
+                        assignedUid = candidate;
+                        break;
+                    }
+                    attempts++;
+                }
+                const finalUid = assignedUid || `U-T${Date.now()}`;
+                await User.updateOne({ _id: user._id }, { $set: { uid: finalUid } });
+                user.uid = finalUid;
             }
 
             // Send login email to admin (fire-and-forget)

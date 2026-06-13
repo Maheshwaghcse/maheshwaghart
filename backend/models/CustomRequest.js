@@ -24,16 +24,11 @@ const customRequestSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Pre-save middleware to assign UID: CR-001, CR-002, etc.
-customRequestSchema.pre('save', async function(next) {
+customRequestSchema.pre('save', async function() {
     if (this.isNew) {
-        try {
-            const count = await mongoose.model('CustomRequest').countDocuments();
-            this.uid = `CR-${String(count + 1).padStart(3, '0')}`;
-        } catch (err) {
-            return next(err);
-        }
+        const count = await mongoose.model('CustomRequest').countDocuments();
+        this.uid = `CR-${String(count + 1).padStart(3, '0')}`;
     }
-    next();
 });
 
 export default mongoose.model('CustomRequest', customRequestSchema);

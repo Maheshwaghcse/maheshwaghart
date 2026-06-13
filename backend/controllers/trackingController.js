@@ -194,17 +194,22 @@ export const getAdminUsers = async (req, res) => {
         // 1. Assign UIDs sequentially to any legacy users missing them (avoids race condition/duplicate key errors in Promise.all)
         for (const u of users) {
             if (!u.uid) {
-                const count = await User.countDocuments({ uid: { $exists: true } });
-                u.uid = `U-${String(count + 1).padStart(3, '0')}`;
-                try {
-                    await u.save();
-                } catch (saveErr) {
-                    // In case of any concurrent collision/duplicate, fetch updated count and retry once
-                    console.error(`Collision/error saving UID U-${count + 1} for ${u.email}:`, saveErr.message);
-                    const freshCount = await User.countDocuments({ uid: { $exists: true } });
-                    u.uid = `U-${String(freshCount + 1).padStart(3, '0')}`;
-                    await u.save();
+                let assignedUid = null;
+                let attempts = 0;
+                while (attempts < 10) {
+                    const base = await User.countDocuments({ uid: { $exists: true, $ne: null } });
+                    const candidate = `U-${String(base + 1 + attempts).padStart(3, '0')}`;
+                    const conflict = await User.findOne({ uid: candidate }).lean();
+                    if (!conflict) {
+                        assignedUid = candidate;
+                        break;
+                    }
+                    attempts++;
                 }
+                const finalUid = assignedUid || `U-T${Date.now()}`;
+                
+                await User.updateOne({ _id: u._id }, { $set: { uid: finalUid } });
+                u.uid = finalUid;
             }
         }
 

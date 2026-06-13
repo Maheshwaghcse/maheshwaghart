@@ -41,21 +41,31 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Hash password and assign UID before saving
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function() {
     if (this.isModified('password')) {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
     }
 
     if (this.isNew && !this.uid) {
-        try {
-            const count = await mongoose.model('User').countDocuments();
-            this.uid = `U-${String(count + 1).padStart(3, '0')}`;
-        } catch (err) {
-            return next(err);
+        // Collision-safe UID generation:
+        // Count only users that already have a uid, then check if the candidate is taken.
+        // Retry up to 10 times to handle concurrent registrations on serverless.
+        let uid = null;
+        let attempts = 0;
+        while (attempts < 10) {
+            const base = await mongoose.model('User').countDocuments({ uid: { $exists: true, $ne: null } });
+            const candidate = `U-${String(base + 1 + attempts).padStart(3, '0')}`;
+            const conflict = await mongoose.model('User').findOne({ uid: candidate }).lean();
+            if (!conflict) {
+                uid = candidate;
+                break;
+            }
+            attempts++;
         }
+        // Fallback: timestamp suffix guarantees uniqueness if all 10 slots collide
+        this.uid = uid || `U-T${Date.now()}`;
     }
-    next();
 });
 
 // Compare password
