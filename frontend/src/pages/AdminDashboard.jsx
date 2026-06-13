@@ -555,32 +555,72 @@ const AdminDashboard = () => {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', width: '100%' }}>
 
-                {/* ── Time Slicer ── */}
-                <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                    <Clock size={16} className="text-primary" />
-                    <span>Filter Timeline:</span>
-                  </div>
-                  <div className="time-slicer" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    {[
-                      { value: '7', label: 'Last 7 Days' },
-                      { value: '15', label: 'Last 15 Days' },
-                      { value: '30', label: 'Last 30 Days' },
-                      { value: '90', label: 'Last 90 Days' },
-                      { value: '365', label: 'Last 1 Year' },
-                      { value: '730', label: 'Last 2 Years' },
-                      { value: 'all', label: 'All Time' }
-                    ].map(opt => (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        className={`btn btn-sm ${timeRange === opt.value ? 'btn-primary' : 'btn-outline'}`}
-                        onClick={() => setTimeRange(opt.value)}
-                        style={{ padding: '0.5rem 1.25rem', fontSize: '0.8rem', borderRadius: '20px', textTransform: 'none', letterSpacing: 'normal' }}
+                {/* ── Time Slicer (Dropdown) ── */}
+                <div className="card" style={{ padding: '1.25rem 1.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                      <Clock size={16} className="text-primary" />
+                      <span>Filter by Time Period:</span>
+                    </div>
+                    <div style={{ position: 'relative' }}>
+                      <select
+                        id="analytics-days-filter"
+                        value={timeRange}
+                        onChange={e => setTimeRange(e.target.value)}
+                        style={{
+                          appearance: 'none',
+                          WebkitAppearance: 'none',
+                          background: 'rgba(189,0,255,0.08)',
+                          border: '1px solid rgba(189,0,255,0.35)',
+                          borderRadius: '12px',
+                          color: '#fff',
+                          padding: '0.55rem 2.5rem 0.55rem 1rem',
+                          fontSize: '0.875rem',
+                          cursor: 'pointer',
+                          outline: 'none',
+                          minWidth: '170px',
+                          fontFamily: 'inherit',
+                          transition: 'border-color 0.2s, box-shadow 0.2s',
+                          boxShadow: '0 2px 12px rgba(189,0,255,0.1)'
+                        }}
+                        onFocus={e => { e.target.style.borderColor = 'rgba(189,0,255,0.7)'; e.target.style.boxShadow = '0 0 0 3px rgba(189,0,255,0.18)'; }}
+                        onBlur={e => { e.target.style.borderColor = 'rgba(189,0,255,0.35)'; e.target.style.boxShadow = '0 2px 12px rgba(189,0,255,0.1)'; }}
                       >
-                        {opt.label}
-                      </button>
-                    ))}
+                        <option value="1"  style={{ background: '#1a0a2e' }}>Today</option>
+                        <option value="3"  style={{ background: '#1a0a2e' }}>Last 3 Days</option>
+                        <option value="7"  style={{ background: '#1a0a2e' }}>Last 7 Days</option>
+                        <option value="14" style={{ background: '#1a0a2e' }}>Last 14 Days</option>
+                        <option value="30" style={{ background: '#1a0a2e' }}>Last 30 Days</option>
+                        <option value="60" style={{ background: '#1a0a2e' }}>Last 60 Days</option>
+                        <option value="90" style={{ background: '#1a0a2e' }}>Last 90 Days</option>
+                        <option value="180" style={{ background: '#1a0a2e' }}>Last 6 Months</option>
+                        <option value="365" style={{ background: '#1a0a2e' }}>Last 1 Year</option>
+                        <option value="730" style={{ background: '#1a0a2e' }}>Last 2 Years</option>
+                        <option value="all" style={{ background: '#1a0a2e' }}>All Time</option>
+                      </select>
+                      {/* Custom chevron icon */}
+                      <span style={{
+                        position: 'absolute',
+                        right: '0.75rem',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        pointerEvents: 'none',
+                        color: '#bd00ff',
+                        fontSize: '0.7rem',
+                        lineHeight: 1
+                      }}>▼</span>
+                    </div>
+                    {/* Quick badge showing active selection */}
+                    <span style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--text-muted)',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                      borderRadius: '20px',
+                      padding: '0.3rem 0.85rem',
+                    }}>
+                      {timeRange === 'all' ? '📊 All Time data' : `📅 Last ${timeRange} day${Number(timeRange) > 1 ? 's' : ''}`}
+                    </span>
                   </div>
                 </div>
 
