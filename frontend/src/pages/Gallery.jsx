@@ -316,7 +316,7 @@ const Gallery = () => {
         }
         .gallery-grid {
           display: grid;
-          gap: 2.5rem; /* Increased gap for breathing room */
+          gap: 2rem;
         }
         .gallery-grid.grid {
           grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -328,15 +328,12 @@ const Gallery = () => {
           text-decoration: none;
           color: inherit;
           background: var(--bg-card);
-          border-radius: 12px;
+          border-radius: 1rem;
           overflow: hidden;
           border: 1px solid var(--border-color);
-          transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                      box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                      border-color 0.4s ease;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
           animation: fadeInUp 0.5s ease forwards;
           opacity: 0;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         @keyframes fadeInUp {
           from {
@@ -350,31 +347,22 @@ const Gallery = () => {
         }
         .gallery-card:hover {
           transform: translateY(-8px);
-          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 20px rgba(197, 168, 128, 0.2);
-          border-color: var(--gold-accent, #c5a880);
+          box-shadow: 0 10px 30px rgba(112, 0, 255, 0.15), 0 0 20px rgba(112, 0, 255, 0.1);
+          border-color: var(--primary-color);
         }
         .card-image-wrapper {
           position: relative;
           overflow: hidden;
           aspect-ratio: 1;
-          background: var(--paper-mat, #f4efe6); /* warm cream/paper mat tone */
-          padding: 12px; /* 12px matting padding inside the card before image */
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: inset 0 0 15px rgba(0,0,0,0.06); /* subtle shadow inside the mat */
         }
         .card-image-wrapper img {
           width: 100%;
           height: 100%;
-          object-fit: contain !important; /* Keep contained to preserve sketch proportions */
-          background: var(--paper-mat, #f4efe6) !important;
-          border: 1px solid rgba(0, 0, 0, 0.06); /* Subtle border for the sketch page */
-          border-radius: 3px;
-          transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+          object-fit: cover;
+          transition: transform 0.5s ease;
         }
         .gallery-card:hover .card-image-wrapper img {
-          transform: scale(1.03); /* Subtle zoom-on-hover */
+          transform: scale(1.05);
         }
         .card-overlay {
           position: absolute;
@@ -382,52 +370,46 @@ const Gallery = () => {
           left: 0;
           width: 100%;
           height: 100%;
-          background: rgba(20, 19, 18, 0.35); /* Softer overlay tone */
+          background: rgba(0,0,0,0.5);
           display: flex;
           align-items: center;
           justify-content: center;
           opacity: 0;
           transition: opacity 0.3s ease;
-          z-index: 5;
         }
         .gallery-card:hover .card-overlay {
           opacity: 1;
         }
         .view-detail {
-          padding: 0.5rem 1.25rem;
-          background: var(--primary-gradient);
+          padding: 0.5rem 1rem;
+          background: var(--primary-color);
           color: white;
           border-radius: 2rem;
           font-size: 0.85rem;
           font-weight: 600;
-          box-shadow: 0 4px 15px rgba(189, 0, 255, 0.3);
         }
         .card-info {
-          padding: 1.25rem;
+          padding: 1rem;
         }
         .card-category {
           font-family: 'Manrope', sans-serif;
-          font-size: 0.72rem;
-          color: var(--gold-accent, #c5a880); /* Gold-toned caption font */
+          font-size: 0.75rem;
+          color: var(--primary-color);
           text-transform: uppercase;
-          letter-spacing: 2px;
+          letter-spacing: 1px;
           font-weight: 700;
-          margin-bottom: 0.35rem;
-          display: block;
         }
         .card-title {
-          font-family: 'Cormorant Garamond', 'Playfair Display', serif; /* Elegant serif titles */
-          font-size: 1.35rem;
-          margin: 0.35rem 0 0.5rem 0;
-          font-weight: 600;
-          color: var(--on-surface);
-          line-height: 1.25;
+          font-family: 'Epilogue', sans-serif;
+          font-size: 1.25rem;
+          margin: 0.5rem 0;
+          font-weight: 700;
         }
         .card-price {
           font-family: 'Manrope', sans-serif;
-          color: var(--gold-accent, #c5a880); /* Soft premium price styling */
+          color: var(--secondary-color, #bd00ff);
           font-weight: 800;
-          font-size: 1.15rem;
+          font-size: 1.2rem;
         }
         .loading-gallery {
           text-align: center;
@@ -492,7 +474,6 @@ const Gallery = () => {
             font-size: 0.85rem;
           }
           .card-title {
-            font-family: 'Cormorant Garamond', 'Playfair Display', serif;
             font-size: clamp(0.78rem, 3.2vw, 0.88rem);
             margin: 0.2rem 0;
             font-weight: 600;
@@ -501,13 +482,12 @@ const Gallery = () => {
           .card-price {
             font-size: clamp(0.78rem, 3.2vw, 0.88rem);
             font-weight: 700;
-            color: var(--gold-accent, #c5a880);
           }
           .card-category {
             font-size: clamp(0.5rem, 2.5vw, 0.58rem);
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: var(--gold-accent, #c5a880);
+            color: var(--primary-color);
             display: block;
             margin-bottom: 0.1rem;
           }

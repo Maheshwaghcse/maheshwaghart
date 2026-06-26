@@ -20,30 +20,24 @@
   --tertiary-container: #a66800;
   --on-tertiary:        #472a00;
 
-  /* Gold & Bronze Accents for Premium Framing */
-  --gold-accent:        #c5a880;
-  --gold-hover:         #b8860b;
-  --gold-glow:          rgba(197, 168, 128, 0.25);
-  --paper-mat:          #f4efe6;
-
-  /* Surfaces - Warm Charcoal-Stone */
-  --surface:                  #141312;
-  --surface-dim:              #0f0f0e;
-  --surface-bright:           #2a2826;
-  --surface-container-lowest: #0a0909;
-  --surface-container-low:    #191817;
-  --surface-container:        #1f1d1c;
-  --surface-container-high:   #272523;
-  --surface-container-highest:#302d2b;
-  --surface-variant:          #302d2b;
+  /* Surfaces */
+  --surface:                  #19101c;
+  --surface-dim:              #19101c;
+  --surface-bright:           #403643;
+  --surface-container-lowest: #130b16;
+  --surface-container-low:    #211824;
+  --surface-container:        #261c28;
+  --surface-container-high:   #302733;
+  --surface-container-highest:#3c313e;
+  --surface-variant:          #3c313e;
 
   /* Text */
-  --on-surface:         #f2ede4;
-  --on-surface-variant: #d5cbba;
+  --on-surface:         #eeddee;
+  --on-surface-variant: #d4c0d7;
 
   /* Borders */
-  --outline:            #90867a;
-  --outline-variant:    #3d3935;
+  --outline:            #9d8ba0;
+  --outline-variant:    #514255;
 
   /* Errors */
   --error:              #ffb4ab;
@@ -56,15 +50,15 @@
   --accent-color:     var(--tertiary);             /* #ffb961 */
   --primary-gradient: linear-gradient(135deg, #bd00ff 0%, #ff36c8 100%);
 
-  --bg-black:     var(--surface);                 /* #141312 */
-  --bg-card:      var(--surface-container);       /* #1f1d1c */
-  --text-white:   var(--on-surface);              /* #f2ede4 */
-  --text-muted:   var(--outline);                 /* #90867a */
-  --border-color: var(--outline-variant);         /* #3d3935 */
+  --bg-black:     var(--surface);                 /* #19101c */
+  --bg-card:      var(--surface-container);       /* #261c28 */
+  --text-white:   var(--on-surface);              /* #eeddee */
+  --text-muted:   var(--outline);                 /* #9d8ba0 */
+  --border-color: var(--outline-variant);         /* #514255 */
 
-  --glass-bg:     rgba(31, 29, 28, 0.70);
-  --glass-border: rgba(197, 168, 128, 0.12);
-  --hero-overlay: linear-gradient(180deg, rgba(20,19,18,0.55) 0%, rgba(20,19,18,0.85) 100%);
+  --glass-bg:     rgba(38, 28, 40, 0.70);
+  --glass-border: rgba(212, 192, 215, 0.12);
+  --hero-overlay: linear-gradient(180deg, rgba(25,16,28,0.55) 0%, rgba(25,16,28,0.85) 100%);
   --bg-brightness: 0.45;
 
   /* ── Typography scale ── */
@@ -297,21 +291,17 @@ input:focus, textarea:focus, select:focus {
 
 /* ─── LIGHT THEME (if toggled) ─── */
 [data-theme='light'] {
-  --surface:                  #FAF8F5; /* Warm off-white aged paper */
-  --surface-container-lowest: #ffffff;
-  --surface-container-low:    #f5f2eb;
-  --surface-container:        #f1ebe2; /* Card bg */
-  --surface-container-high:   #e8e2d6;
-  --surface-container-highest:#ded6c8;
-  --surface-variant:          #ded6c8;
-  --on-surface:               #1c1b1a;
-  --on-surface-variant:       #4c463f;
-  --outline:                  #857d73;
-  --outline-variant:          #dbd3c5;
-  --glass-bg:                 rgba(250, 248, 245, 0.85);
-  --glass-border:             rgba(28, 27, 26, 0.08);
-  --hero-overlay:             linear-gradient(180deg, rgba(250,248,245,0.45) 0%, rgba(250,248,245,0.8) 100%);
-  --bg-brightness: 0.95;
+  --surface:                  #fdf7ff;
+  --surface-container:        #f5edf8;
+  --surface-container-high:   #efe7f3;
+  --on-surface:               #19101c;
+  --on-surface-variant:       #3c313e;
+  --outline:                  #6d5d71;
+  --outline-variant:          #d4c0d7;
+  --glass-bg:                 rgba(253, 247, 255, 0.80);
+  --glass-border:             rgba(60, 49, 62, 0.12);
+  --hero-overlay:             linear-gradient(180deg, rgba(253,247,255,0.4) 0%, rgba(253,247,255,0.75) 100%);
+  --bg-brightness: 0.9;
   --bg-black: var(--surface);
   --bg-card:  var(--surface-container);
   --text-white: var(--on-surface);

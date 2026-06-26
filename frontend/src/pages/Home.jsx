@@ -740,12 +740,10 @@ const Home = () => {
                     <OptimizedImage
                       src={sketch.images[0]}
                       alt={sketch.title}
-                      aspectRatio="3/4"
                       onClick={() => trackClick(`View Featured Artwork - ${sketch.title}`)}
                     />
                   </div>
                   <div className="gallery-info">
-                    <span className="gallery-category">{sketch.category}</span>
                     <h3 className="gallery-title">{sketch.title}</h3>
                   </div>
                 </Link>
@@ -827,9 +825,7 @@ const Home = () => {
                             />
                           </div>
                           <div className="portfolio-info">
-                            <span className="portfolio-category">{sketch.category}</span>
-                            <h3 className="portfolio-title">{sketch.title}</h3>
-                            <p className="portfolio-tagline">{sketch.tagline}</p>
+                            <h3>{sketch.tagline || sketch.title}</h3>
                           </div>
                         </Link>
                       </SwiperSlide>
@@ -1525,7 +1521,7 @@ const Home = () => {
         .gallery-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 2.5rem; /* Increased gap for breathing room */
+          gap: 2rem;
           margin-top: 2rem;
         }
         
@@ -1534,67 +1530,59 @@ const Home = () => {
           flex-direction: column;
           text-decoration: none;
           color: var(--on-surface);
-          border-radius: 12px;
-          border: 1px solid var(--border-color);
-          overflow: hidden;
-          background: var(--bg-card);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-          transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                      box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-                      border-color 0.4s ease;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          group: hover;
         }
         
         .gallery-img-wrapper { 
+          width: 100%;
           aspect-ratio: 3/4; 
           overflow: hidden; 
-          border-radius: 12px 12px 0 0;
-          margin-bottom: 0;
-          background: var(--paper-mat, #f4efe6); /* warm cream/paper mat tone */
-          padding: 10px; /* matted padding inside the card before image */
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: inset 0 0 15px rgba(0,0,0,0.06); /* subtle shadow inside the mat */
-          border-bottom: 1px solid var(--border-color);
+          border-radius: 0.5rem;
+          margin-bottom: 1.2rem;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
           transition: all 0.5s ease;
+          position: relative;
         }
         
-        .gallery-item img {
+        .gallery-img-wrapper > * {
+          position: absolute !important;
+          inset: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+        }
+
+        .gallery-item img,
+        .gallery-img-wrapper img {
           width: 100%; height: 100%;
-          object-fit: contain !important; /* Keep contained to preserve sketch proportions */
-          background: var(--paper-mat, #f4efe6) !important;
-          border: 1px solid rgba(0, 0, 0, 0.05); /* Subtle border for the sketch page */
-          border-radius: 2px;
-          transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+          object-fit: cover;
+          object-position: center top;
+          display: block;
+          transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         
-        .gallery-item:hover {
+        .gallery-item:hover .gallery-img-wrapper {
           transform: translateY(-8px);
-          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), 0 0 20px rgba(197, 168, 128, 0.15);
-          border-color: var(--gold-accent, #c5a880);
+          box-shadow: 0 15px 40px rgba(189, 0, 255, 0.15);
         }
         
-        .gallery-item:hover img { 
-          transform: scale(1.03); 
-        }
+        .gallery-item:hover img { transform: scale(1.03); }
         
         .gallery-info {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          padding: 1.25rem;
-          background: transparent;
+          padding: 0 0.5rem;
         }
         
         .gallery-title {
-          font-family: 'Cormorant Garamond', 'Playfair Display', serif; /* Elegant serif titles */
-          font-size: 1.35rem;
-          font-weight: 600;
-          letter-spacing: 0.02em;
-          color: var(--on-surface);
-          margin: 0.35rem 0 0.5rem 0;
+          font-family: 'Cinzel', serif;
+          font-size: 1.25rem;
+          font-weight: 500;
+          letter-spacing: 0.03em;
+          color: #fff;
+          margin: 0 0 0.5rem 0;
           transition: color 0.3s ease;
-          line-height: 1.25;
         }
         
         .gallery-view-text {
@@ -2185,24 +2173,6 @@ const Home = () => {
           .portfolioSwiper .swiper-slide {
             width: 300px;
           }
-          
-          /* Hide category and title on mobile, leaving only tagline and sketch */
-          .portfolio-card .portfolio-category,
-          .portfolio-card .portfolio-title {
-            display: none !important;
-          }
-          
-          .portfolio-card .portfolio-tagline {
-            display: block !important;
-            font-size: 0.9rem;
-            color: var(--on-surface-variant);
-            font-weight: 500;
-            text-align: center;
-          }
-          
-          .portfolio-info {
-            padding: 0.75rem 0 !important;
-          }
         }
         
         .portfolio-card {
@@ -2230,11 +2200,6 @@ const Home = () => {
           overflow: hidden;
           border-radius: 8px;
           box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-          background: var(--paper-mat, #f4efe6); /* warm cream/paper mat tone */
-          padding: 10px; /* matted padding inside the card before image */
-          display: flex;
-          align-items: center;
-          justify-content: center;
           transition: box-shadow 0.5s ease;
           transform: translate3d(0, 0, 0);
           backface-visibility: hidden;
@@ -2243,21 +2208,18 @@ const Home = () => {
         }
         
         .portfolioSwiper .swiper-slide-active .portfolio-img-container {
-          box-shadow: 0 20px 50px rgba(197, 168, 128, 0.25);
+          box-shadow: 0 20px 50px rgba(189, 0, 255, 0.2);
         }
         
         .portfolio-card img {
           width: 100%;
           height: 100%;
-          object-fit: contain !important; /* Keep contained to preserve sketch proportions */
-          background: var(--paper-mat, #f4efe6) !important;
-          border: 1px solid rgba(0, 0, 0, 0.05); /* Subtle border for the sketch page */
-          border-radius: 2px;
+          object-fit: cover;
           transition: transform 0.7s ease;
         }
         
         .portfolio-card:hover img {
-          transform: scale(1.03);
+          transform: scale(1.05);
         }
         
         .portfolio-info {
@@ -2273,14 +2235,13 @@ const Home = () => {
           transform: translateY(0);
         }
         
-        .portfolio-title {
-          font-family: 'Cormorant Garamond', 'Playfair Display', serif; /* Elegant serif titles */
+        .portfolio-info h3 {
+          font-family: 'Cinzel', serif, 'Epilogue', sans-serif;
           font-size: 1.5rem;
-          font-weight: 500;
-          letter-spacing: 0.03em;
-          color: var(--on-surface);
-          margin: 0.35rem 0 0.5rem 0;
-          line-height: 1.25;
+          font-weight: 400;
+          letter-spacing: 0.05em;
+          color: #fff;
+          margin: 0 0 0.5rem 0;
         }
         
         .portfolio-link-text {
@@ -2322,20 +2283,13 @@ const Home = () => {
 
         .portfolio-category {
           font-family: 'Manrope', sans-serif;
-          font-size: 0.72rem;
+          font-size: 0.75rem;
           font-weight: 700;
-          letter-spacing: 2px;
+          letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: var(--gold-accent, #c5a880);
-          margin-bottom: 0.35rem;
+          color: var(--primary);
+          margin-bottom: 0.5rem;
           display: block;
-        }
-        
-        .portfolio-tagline {
-          font-family: 'Manrope', sans-serif;
-          font-size: 0.85rem;
-          color: var(--outline);
-          margin: 0;
         }
         
         .portfolio-meta {
@@ -2377,50 +2331,40 @@ const Home = () => {
           }
           
           .featured-section .gallery-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             padding: 1.25rem;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
           }
           
           .featured-section .gallery-item:hover {
-            background: linear-gradient(135deg, rgba(197, 168, 128, 0.05) 0%, rgba(31, 29, 28, 0.2) 100%);
-            border-color: var(--gold-accent, #c5a880);
+            background: linear-gradient(135deg, rgba(189, 0, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-color: rgba(189, 0, 255, 0.25);
             transform: translateY(-12px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 25px rgba(197, 168, 128, 0.15);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(189, 0, 255, 0.15);
           }
           
           .featured-section .gallery-img-wrapper {
             border-radius: 12px;
             margin-bottom: 1.25rem;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.06), 0 5px 15px rgba(0,0,0,0.3);
-            border: 1px solid var(--border-color);
-            background: var(--paper-mat, #f4efe6);
-            padding: 12px; /* Matted image look */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            aspect-ratio: 3/4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
           }
           
           .featured-section .gallery-item:hover .gallery-img-wrapper {
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
             transform: translateY(0); /* Disable wrapper translate, since card itself translates */
           }
           
           .featured-section .gallery-item img {
-            object-fit: contain !important;
-            background: var(--paper-mat, #f4efe6) !important;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 2px;
             transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
           }
           
           .featured-section .gallery-item:hover img {
-            transform: scale(1.03);
+            transform: scale(1.06);
           }
           
           .featured-section .gallery-info {
@@ -2429,10 +2373,9 @@ const Home = () => {
           }
           
           .featured-section .gallery-title {
-            font-family: 'Cormorant Garamond', 'Playfair Display', serif;
-            font-size: 1.45rem;
-            font-weight: 600;
-            color: var(--on-surface);
+            font-size: 1.35rem;
+            font-weight: 500;
+            color: #ffffff;
             margin: 0;
             white-space: nowrap;
             overflow: hidden;
@@ -2441,14 +2384,9 @@ const Home = () => {
           }
           
           .featured-section .gallery-category {
-            color: var(--gold-accent, #c5a880);
+            color: rgba(189, 0, 255, 0.8);
             font-size: 0.72rem;
             margin-bottom: 0.35rem;
-            font-family: 'Manrope', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            display: block;
           }
           
           .featured-section .gallery-footer {
@@ -2478,33 +2416,20 @@ const Home = () => {
           /* active portfolio card style */
           .portfolioSwiper .swiper-slide-active .portfolio-card {
             transform: scale(1.05);
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(189, 0, 255, 0.15);
             border-radius: 16px;
             padding: 1.25rem;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(189, 0, 255, 0.15);
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
           }
           
           .portfolioSwiper .swiper-slide-active .portfolio-img-container {
             border-radius: 12px;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.06), 0 10px 30px rgba(0, 0, 0, 0.4);
-            background: var(--paper-mat, #f4efe6);
-            padding: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
             transition: all 0.6s ease;
             position: relative;
             overflow: hidden;
-            aspect-ratio: 4/5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          
-          .portfolioSwiper .swiper-slide-active .portfolio-img-container img {
-            object-fit: contain !important;
-            background: var(--paper-mat, #f4efe6) !important;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 2px;
           }
           
           /* Luxury glossy glass reflection diagonal shine sweep */
@@ -2534,8 +2459,8 @@ const Home = () => {
           }
           
           .portfolioSwiper .swiper-slide-active .portfolio-card:hover {
-            border-color: var(--gold-accent, #c5a880);
-            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.7), 0 0 40px rgba(197, 168, 128, 0.2);
+            border-color: rgba(189, 0, 255, 0.45);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.8), 0 0 45px rgba(189, 0, 255, 0.3);
             transform: scale(1.07) translateY(-5px);
           }
           
@@ -2553,40 +2478,21 @@ const Home = () => {
             text-align: center;
           }
           
-          .portfolioSwiper .swiper-slide-active .portfolio-title {
-            font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+          .portfolioSwiper .swiper-slide-active .portfolio-info h3 {
             font-size: 1.6rem;
-            color: var(--on-surface);
+            color: #ffffff;
             font-weight: 500;
-            margin: 0.35rem 0 0.5rem 0;
-          }
-          
-          .portfolioSwiper .swiper-slide-active .portfolio-category {
-            color: var(--gold-accent, #c5a880);
-            font-size: 0.72rem;
-            margin-bottom: 0.35rem;
-            font-family: 'Manrope', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            display: block;
-          }
-
-          .portfolioSwiper .swiper-slide-active .portfolio-tagline {
-            color: var(--outline);
-            font-size: 0.9rem;
-            font-family: 'Manrope', sans-serif;
-            margin: 0;
+            margin-bottom: 0.5rem;
           }
           
           /* Glowing Swiper Buttons */
           .portfolioSwiper .swiper-button-next,
           .portfolioSwiper .swiper-button-prev {
             color: #fff;
-            background: rgba(197, 168, 128, 0.08);
+            background: rgba(189, 0, 255, 0.08);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(197, 168, 128, 0.3);
+            border: 1px solid rgba(189, 0, 255, 0.3);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             width: 55px;
@@ -2595,9 +2501,9 @@ const Home = () => {
           
           .portfolioSwiper .swiper-button-next:hover,
           .portfolioSwiper .swiper-button-prev:hover {
-            background: rgba(197, 168, 128, 0.2);
-            border-color: var(--gold-accent, #c5a880);
-            box-shadow: 0 0 20px rgba(197, 168, 128, 0.5);
+            background: rgba(189, 0, 255, 0.2);
+            border-color: rgba(189, 0, 255, 0.7);
+            box-shadow: 0 0 20px rgba(189, 0, 255, 0.5);
             transform: scale(1.1);
           }
         }
