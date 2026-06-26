@@ -60,6 +60,7 @@ const AdminDashboard = () => {
   const [size, setSize] = useState('A4');
   const [sizeType, setSizeType] = useState('A4');
   const [medium, setMedium] = useState('');
+  const [mediumType, setMediumType] = useState('');
   const [artist, setArtist] = useState('Mahesh Wagh');
   const [images, setImages] = useState([]);
   const [isDigitalDownload, setIsDigitalDownload] = useState(false);
@@ -75,6 +76,20 @@ const AdminDashboard = () => {
     } else {
       setSizeType('Custom');
       setSize(s);
+    }
+  };
+
+  const syncMediumStates = (loadedMedium) => {
+    const m = loadedMedium || '';
+    if (m === 'Graphite' || m === 'Charcoal' || m === 'Both' || m === 'Graphite & Charcoal' || m === 'Pen Art') {
+      setMediumType(m);
+      setMedium(m);
+    } else if (m === '') {
+      setMediumType('');
+      setMedium('');
+    } else {
+      setMediumType('Custom');
+      setMedium(m);
     }
   };
 
@@ -297,6 +312,7 @@ const AdminDashboard = () => {
     setSize('A4');
     setSizeType('A4');
     setMedium('');
+    setMediumType('');
     setArtist('Mahesh Wagh');
     setImages([]);
     setImagePreview('');
@@ -315,7 +331,8 @@ const AdminDashboard = () => {
     setTagline(sketch.tagline || '');
     setDescription(sketch.description || '');
     syncSizeStates(sketch.size);
-    setMedium(sketch.medium || '');
+    syncMediumStates(sketch.medium);
+    setKeywords(sketch.keywords || '');
     setArtist(sketch.artist || '');
     setImages(sketch.images || []);
     setIsDigitalDownload(sketch.isDigitalDownload || false);
@@ -333,7 +350,8 @@ const AdminDashboard = () => {
         setTagline(freshSketch.tagline || '');
         setDescription(freshSketch.description || '');
         syncSizeStates(freshSketch.size);
-        setMedium(freshSketch.medium || '');
+        syncMediumStates(freshSketch.medium);
+        setKeywords(freshSketch.keywords || '');
         setArtist(freshSketch.artist || '');
         setImages(freshSketch.images || []);
         setIsDigitalDownload(freshSketch.isDigitalDownload || false);
@@ -372,6 +390,7 @@ const AdminDashboard = () => {
       artist: artist.trim() || 'Mahesh Wagh',
       images,
       isDigitalDownload,
+      keywords: keywords.trim(),
     };
 
     try {
@@ -1268,15 +1287,39 @@ const AdminDashboard = () => {
                     <label className="form-label">MEDIUM</label>
                     <select
                       className="form-control"
-                      value={medium}
-                      onChange={(e) => setMedium(e.target.value)}
+                      value={mediumType}
+                      onChange={(e) => {
+                        const selected = e.target.value;
+                        setMediumType(selected);
+                        if (selected !== 'Custom') {
+                          setMedium(selected);
+                        } else {
+                          if (medium === 'Graphite' || medium === 'Charcoal' || medium === 'Both' || medium === 'Graphite & Charcoal' || medium === 'Pen Art') {
+                            setMedium('');
+                          }
+                        }
+                      }}
                     >
                       <option value="">Select medium</option>
                       <option value="Graphite">Graphite</option>
                       <option value="Charcoal">Charcoal</option>
                       <option value="Both">Both (Graphite & Charcoal)</option>
                       <option value="Graphite & Charcoal">Graphite & Charcoal</option>
+                      <option value="Pen Art">✒️ Pen Art</option>
+                      <option value="Custom">✨ Custom Medium...</option>
                     </select>
+
+                    {mediumType === 'Custom' && (
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={medium}
+                        onChange={(e) => setMedium(e.target.value)}
+                        placeholder="Specify custom medium (e.g., Oil Paint, Colored Pencil)"
+                        required
+                        style={{ marginTop: '0.5rem', animation: 'fadeIn 0.2s ease' }}
+                      />
+                    )}
                   </div>
                 </div>
 
@@ -1419,6 +1462,17 @@ const AdminDashboard = () => {
                       </div>
                     )}
                   </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">KEYWORDS (FOR CLIENT SEARCHING)</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={keywords}
+                    onChange={(e) => setKeywords(e.target.value)}
+                    placeholder="e.g., Shiva, devotional, charcoal, portrait (comma separated)"
+                  />
                 </div>
 
                 <div className="form-group">

@@ -46,8 +46,10 @@ const Gallery = () => {
 
   const filteredSketches = useMemo(() => {
     return sketches.filter(sketch => {
-      return (filter === 'All' || sketch.category === filter) &&
-        sketch.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = filter === 'All' || sketch.category === filter;
+      const matchesSearch = (sketch.title && sketch.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                            (sketch.keywords && sketch.keywords.toLowerCase().includes(searchTerm.toLowerCase()));
+      return matchesCategory && matchesSearch;
     });
   }, [sketches, filter, searchTerm]);
 
@@ -77,7 +79,7 @@ const Gallery = () => {
               <Search size={20} />
               <input
                 type="text"
-                placeholder="Search by title..."
+                placeholder="Search by title or keywords..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />

@@ -39,6 +39,11 @@ const sketchSchema = new mongoose.Schema({
     tagline: {
         type: String,
         required: false
+    },
+    keywords: {
+        type: String,
+        required: false,
+        default: ''
     }
 }, { timestamps: true });
 

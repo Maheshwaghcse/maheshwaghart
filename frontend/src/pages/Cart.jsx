@@ -72,7 +72,7 @@ const Cart = () => {
                           onChange={(e) => {
                             const checked = e.target.checked;
                             const derivedType = item.size || 'A4';
-                            const derivedPrice = derivedType.includes('A3') ? 300 : derivedType.includes('A4') ? 500 : 500;
+                            const derivedPrice = derivedType.includes('A3') ? 600 : derivedType.includes('A4') ? 400 : 400;
                             updateCartItem && updateCartItem(item.sketch, {
                               includeFrame: checked,
                               frameType: checked ? derivedType : null,

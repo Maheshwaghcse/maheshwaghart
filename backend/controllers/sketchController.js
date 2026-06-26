@@ -26,7 +26,12 @@ const getSketches = async (req, res) => {
         }
 
         const query = keyword
-            ? { title: { $regex: keyword, $options: 'i' } }
+            ? {
+                $or: [
+                    { title: { $regex: keyword, $options: 'i' } },
+                    { keywords: { $regex: keyword, $options: 'i' } }
+                ]
+              }
             : {};
 
         // .lean() returns plain JS objects (~3x faster than Mongoose documents)
@@ -67,7 +72,7 @@ const getSketchById = async (req, res) => {
 // @access  Private/Admin
 const createSketch = async (req, res) => {
     try {
-        const { title, price, description, images, category, size, medium, isDigitalDownload, tagline } = req.body;
+        const { title, price, description, images, category, size, medium, isDigitalDownload, tagline, keywords } = req.body;
         
         const sketch = new Sketch({
             title,
@@ -78,7 +83,8 @@ const createSketch = async (req, res) => {
             size,
             medium,
             isDigitalDownload,
-            tagline
+            tagline,
+            keywords
         });
 
         const createdSketch = await sketch.save();
@@ -94,7 +100,7 @@ const createSketch = async (req, res) => {
 // @access  Private/Admin
 const updateSketch = async (req, res) => {
     try {
-        const { title, price, description, images, category, size, medium, isDigitalDownload, tagline } = req.body;
+        const { title, price, description, images, category, size, medium, isDigitalDownload, tagline, keywords } = req.body;
         const sketch = await Sketch.findById(req.params.id);
 
         if (sketch) {
@@ -107,6 +113,7 @@ const updateSketch = async (req, res) => {
             sketch.medium = medium || sketch.medium;
             sketch.isDigitalDownload = isDigitalDownload !== undefined ? isDigitalDownload : sketch.isDigitalDownload;
             sketch.tagline = tagline !== undefined ? tagline : sketch.tagline;
+            sketch.keywords = keywords !== undefined ? keywords : sketch.keywords;
 
             const updatedSketch = await sketch.save();
             invalidateCache(); // Clear cache

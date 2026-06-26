@@ -1,37 +1,49 @@
 // Checkout.jsx
-import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, Lock, CreditCard, ArrowLeft, Truck, Clock, CheckCircle, MessageCircle, Copy, Trash2 } from 'lucide-react';
-import { CartContext } from '../context/CartContext';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  ShieldCheck,
+  Lock,
+  CreditCard,
+  ArrowLeft,
+  Truck,
+  Clock,
+  CheckCircle,
+  MessageCircle,
+  Copy,
+  Trash2,
+} from "lucide-react";
+import { CartContext } from "../context/CartContext";
+import { AuthContext } from "../context/AuthContext";
 
 const Checkout = () => {
-  const { cartItems, clearCart, getCartTotal, removeFromCart } = useContext(CartContext);
+  const { cartItems, clearCart, getCartTotal, removeFromCart } =
+    useContext(CartContext);
   const { userInfo } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
   });
-  const [paymentMethod, setPaymentMethod] = useState('whatsapp');
+  const [paymentMethod, setPaymentMethod] = useState("whatsapp");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [orderPlaced, setOrderPlaced] = useState(false);
-  const [orderId, setOrderId] = useState('');
+  const [orderId, setOrderId] = useState("");
 
   useEffect(() => {
     if (formData.email) return;
 
     const isGuest = !userInfo;
-    const addressKey = isGuest 
-      ? 'sketch_shipping_address_guest' 
+    const addressKey = isGuest
+      ? "sketch_shipping_address_guest"
       : `sketch_shipping_address_${userInfo.email}`;
     const savedAddress = localStorage.getItem(addressKey);
 
@@ -39,33 +51,43 @@ const Checkout = () => {
       try {
         const parsed = JSON.parse(savedAddress);
         setFormData({
-          email: parsed.email || (isGuest ? '' : userInfo.email) || '',
-          fullName: parsed.fullName || (isGuest ? '' : userInfo.name) || '',
-          phone: parsed.phone || '',
-          address: parsed.address || '',
-          city: parsed.city || '',
-          state: parsed.state || '',
-          postalCode: parsed.postalCode || '',
-          country: parsed.country || '',
+          email: parsed.email || (isGuest ? "" : userInfo.email) || "",
+          fullName: parsed.fullName || (isGuest ? "" : userInfo.name) || "",
+          phone: parsed.phone || "",
+          address: parsed.address || "",
+          city: parsed.city || "",
+          state: parsed.state || "",
+          postalCode: parsed.postalCode || "",
+          country: parsed.country || "",
         });
       } catch (e) {
-        console.error('Error parsing saved address:', e);
+        console.error("Error parsing saved address:", e);
         if (!isGuest) {
-          setFormData(prev => ({ ...prev, email: userInfo.email, fullName: userInfo.name || '' }));
+          setFormData((prev) => ({
+            ...prev,
+            email: userInfo.email,
+            fullName: userInfo.name || "",
+          }));
         }
       }
     } else if (!isGuest) {
-      setFormData(prev => ({ ...prev, email: userInfo.email, fullName: userInfo.name || '' }));
+      setFormData((prev) => ({
+        ...prev,
+        email: userInfo.email,
+        fullName: userInfo.name || "",
+      }));
     }
   }, [userInfo, navigate, formData.email]);
 
   useEffect(() => {
     if (cartItems.length === 0 && !orderPlaced) {
-      navigate('/cart');
+      navigate("/cart");
     }
   }, [cartItems, navigate, orderPlaced]);
 
-  const totalPrice = getCartTotal ? getCartTotal() : cartItems.reduce((acc, item) => acc + item.price, 0);
+  const totalPrice = getCartTotal
+    ? getCartTotal()
+    : cartItems.reduce((acc, item) => acc + item.price, 0);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -74,57 +96,70 @@ const Checkout = () => {
   const placeOrderHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     // Validate form
-    if (!formData.fullName || !formData.email || !formData.phone || !formData.address || !formData.city || !formData.postalCode) {
-      setError('Please fill in all required fields');
+    if (
+      !formData.fullName ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.address ||
+      !formData.city ||
+      !formData.postalCode
+    ) {
+      setError("Please fill in all required fields");
       setLoading(false);
       return;
     }
 
     try {
       const headers = {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       };
       if (userInfo && userInfo.token) {
-        headers['Authorization'] = `Bearer ${userInfo.token}`;
+        headers["Authorization"] = `Bearer ${userInfo.token}`;
       }
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          orderItems: cartItems.map(item => ({
-            sketch: item.sketch,
-            name: item.title + (item.includeFrame ? ` (with ${item.frameType} Frame)` : ''),
-            image: item.image,
-            price: item.price + (item.includeFrame ? item.framePrice : 0),
-            qty: 1
-          })),
-          shippingAddress: formData,
-          paymentMethod: 'WhatsApp Payment',
-          itemsPrice: totalPrice,
-          shippingPrice: 0,
-          taxPrice: 0,
-          totalPrice: totalPrice,
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || ""}/api/orders`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            orderItems: cartItems.map((item) => ({
+              sketch: item.sketch,
+              name:
+                item.title +
+                (item.includeFrame ? ` (with ${item.frameType} Frame)` : ""),
+              image: item.image,
+              price: item.price + (item.includeFrame ? item.framePrice : 0),
+              qty: 1,
+            })),
+            shippingAddress: formData,
+            paymentMethod: "WhatsApp Payment",
+            itemsPrice: totalPrice,
+            shippingPrice: 0,
+            taxPrice: 0,
+            totalPrice: totalPrice,
+          }),
+        },
+      );
 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || 'Something went wrong');
+        throw new Error(data.message || "Something went wrong");
       }
 
-      setOrderId(data.order?._id || 'ORD-' + Date.now());
+      setOrderId(data.order?._id || "ORD-" + Date.now());
       setOrderPlaced(true);
       clearCart();
 
       // Save shipping details to localStorage for future auto-fill
-      const addressKey = userInfo && userInfo.email 
-        ? `sketch_shipping_address_${userInfo.email}` 
-        : 'sketch_shipping_address_guest';
+      const addressKey =
+        userInfo && userInfo.email
+          ? `sketch_shipping_address_${userInfo.email}`
+          : "sketch_shipping_address_guest";
       const addressData = {
         fullName: formData.fullName,
         email: formData.email,
@@ -140,9 +175,9 @@ const Checkout = () => {
       // WhatsApp message formatting
       let msg = `*Hello, I want to order from your Sketch Store 🎨*\n\n*Order Details:*\n`;
       cartItems.forEach((item, index) => {
-        msg += `${index + 1}. ${item.title} — ₹${(item.price).toFixed(2)}\n`;
+        msg += `${index + 1}. ${item.title} — ₹${item.price.toFixed(2)}\n`;
         if (item.includeFrame) {
-          msg += `   + ${item.frameType} Frame — ₹${(item.framePrice).toFixed(2)}\n`;
+          msg += `   + ${item.frameType} Frame — ₹${item.framePrice.toFixed(2)}\n`;
         }
         msg += `\n`;
       });
@@ -150,15 +185,15 @@ const Checkout = () => {
       msg += `*Customer Info:*\n`;
       msg += `Name: ${formData.fullName}\n`;
       msg += `Phone: ${formData.phone}\n`;
-      msg += `Address: ${formData.address}, ${formData.city}, ${formData.state || ''} ${formData.postalCode}\n\n`;
-      msg += `*Payment Method:* ${paymentMethod === 'whatsapp' ? 'WhatsApp Payment' : 'Cash on Delivery'}\n\n`;
+      msg += `Address: ${formData.address}, ${formData.city}, ${formData.state || ""} ${formData.postalCode}\n\n`;
+      msg += `*Payment Method:* ${paymentMethod === "whatsapp" ? "WhatsApp Payment" : "Cash on Delivery"}\n\n`;
       msg += `Please confirm my order.`;
 
       const encodedMsg = encodeURIComponent(msg);
-      const whatsappNumber = '7387062073'; // Replace with actual business number
+      const whatsappNumber = "7387062073";
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
 
-      window.open(whatsappUrl, '_blank');
+      window.open(whatsappUrl, "_blank");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -168,20 +203,61 @@ const Checkout = () => {
 
   if (orderPlaced) {
     return (
-      <div className="animate-fade-in order-success" style={{ minHeight: '80vh', paddingTop: '6rem', paddingBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="success-container" style={{ textAlign: 'center', background: 'var(--bg-card)', padding: '4rem 2rem', borderRadius: '1.5rem', border: '1px solid var(--border-color)', maxWidth: '600px', width: '100%' }}>
-          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', margin: '1rem 0' }}>
+      <div
+        className="animate-fade-in order-success"
+        style={{
+          minHeight: "80vh",
+          paddingTop: "6rem",
+          paddingBottom: "2rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          className="success-container"
+          style={{
+            textAlign: "center",
+            background: "var(--bg-card)",
+            padding: "4rem 2rem",
+            borderRadius: "1.5rem",
+            border: "1px solid var(--border-color)",
+            maxWidth: "600px",
+            width: "100%",
+          }}
+        >
+          <h1
+            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", margin: "1rem 0" }}
+          >
             Your Peace Is On The <span className="text-gradient">Way</span>
           </h1>
-          <div style={{ marginBottom: '2rem', marginTop: '1.5rem' }}>
-            <CheckCircle size={64} style={{ color: 'var(--primary-color)' }} />
+          <div style={{ marginBottom: "2rem", marginTop: "1.5rem" }}>
+            <CheckCircle size={64} style={{ color: "var(--primary-color)" }} />
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.8', marginBottom: '1rem' }}>
-            Your request is received and I'm already thinking about it
-            Expect my WhatsApp message soon.</p>
-          <div className="success-actions" style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <button onClick={() => navigate('/gallery')} className="btn btn-outline">Continue Shopping</button>
-            <button onClick={() => navigate('/')} className="btn btn-primary">Go Home</button>
+          <p
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "1.1rem",
+              lineHeight: "1.8",
+              marginBottom: "1rem",
+            }}
+          >
+            Your request is received and I'm already thinking about it Expect my
+            WhatsApp message soon.
+          </p>
+          <div
+            className="success-actions"
+            style={{ display: "flex", gap: "1rem", justifyContent: "center" }}
+          >
+            <button
+              onClick={() => navigate("/gallery")}
+              className="btn btn-outline"
+            >
+              Continue Shopping
+            </button>
+            <button onClick={() => navigate("/")} className="btn btn-primary">
+              Go Home
+            </button>
           </div>
         </div>
       </div>
@@ -189,19 +265,38 @@ const Checkout = () => {
   }
 
   return (
-    <div className="animate-fade-in" style={{ padding: '6rem 0' }}>
+    <div className="animate-fade-in" style={{ padding: "6rem 0" }}>
       <div className="container">
-        <button onClick={() => navigate('/cart')} className="back-btn">
+        <button onClick={() => navigate("/cart")} className="back-btn">
           <ArrowLeft size={18} /> Back to Cart
         </button>
 
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: "center", marginBottom: "3rem" }}>
           <span className="gallery-badge">It's Yours.</span>
-          <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', marginTop: '1rem' }}>
+          <h1
+            style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)", marginTop: "1rem" }}
+          >
             Claim Your <span className="text-gradient">Piece.</span>
           </h1>
-          <p style={{ fontSize: '1.2rem', lineHeight: '1.8', marginBottom: '1.5rem', color: '#c8c8cc' }}>Every original leaves only once. One message is all it takes to make sure it leaves with you.</p>
-          <div style={{ width: '80px', height: '3px', background: "var(--primary-gradient)", margin: '1.5rem auto' }}></div>
+          <p
+            style={{
+              fontSize: "1.2rem",
+              lineHeight: "1.8",
+              marginBottom: "1.5rem",
+              color: "#c8c8cc",
+            }}
+          >
+            Every original leaves only once. One message is all it takes to make
+            sure it leaves with you.
+          </p>
+          <div
+            style={{
+              width: "80px",
+              height: "3px",
+              background: "var(--primary-gradient)",
+              margin: "1.5rem auto",
+            }}
+          ></div>
         </div>
 
         {error && <div className="error-alert">{error}</div>}
@@ -213,16 +308,35 @@ const Checkout = () => {
               <div className="form-row">
                 <div className="form-group">
                   <label>Full Name *</label>
-                  <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
                 <div className="form-group">
                   <label>Email *</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
               </div>
               <div className="form-group">
                 <label>Phone Number *</label>
-                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="10-digit mobile number" required />
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="10-digit mobile number"
+                  required
+                />
               </div>
             </div>
 
@@ -230,26 +344,55 @@ const Checkout = () => {
               <h2>Shipping Address</h2>
               <div className="form-group">
                 <label>Street Address *</label>
-                <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="House number, building, street" required />
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="House number, building, street"
+                  required
+                />
               </div>
               <div className="form-row">
                 <div className="form-group">
                   <label>City *</label>
-                  <input type="text" name="city" value={formData.city} onChange={handleChange} required />
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
                 <div className="form-group">
                   <label>State</label>
-                  <input type="text" name="state" value={formData.state} onChange={handleChange} />
+                  <input
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
                   <label>Postal Code *</label>
-                  <input type="text" name="postalCode" value={formData.postalCode} onChange={handleChange} required />
+                  <input
+                    type="text"
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
                 <div className="form-group">
                   <label>Country</label>
-                  <input type="text" name="country" value={formData.country} onChange={handleChange} />
+                  <input
+                    type="text"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
             </div>
@@ -258,21 +401,37 @@ const Checkout = () => {
               <h2>Payment Method</h2>
               <div className="payment-options">
                 <label className="payment-option whatsapp active">
-                  <input type="radio" name="payment" value="whatsapp" checked={true} readOnly />
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="whatsapp"
+                    checked={true}
+                    readOnly
+                  />
                   <div className="payment-info">
-                    <strong style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <strong
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
                       <MessageCircle size={16} /> WhatsApp Payment
                     </strong>
                     <span>UPI / QR Code • Send screenshot on WhatsApp</span>
                   </div>
                 </label>
               </div>
-
-
             </div>
 
-            <button type="submit" className="btn btn-whatsapp place-order-btn" disabled={loading}>
-              {loading ? 'Processing...' : (
+            <button
+              type="submit"
+              className="btn btn-whatsapp place-order-btn"
+              disabled={loading}
+            >
+              {loading ? (
+                "Processing..."
+              ) : (
                 <>
                   <MessageCircle size={18} /> Place Order via WhatsApp
                 </>
@@ -283,12 +442,27 @@ const Checkout = () => {
           <div className="order-summary-sidebar">
             <h3>Order Summary</h3>
             <div className="summary-items">
-              {cartItems.map(item => (
+              {cartItems.map((item) => (
                 <div key={item.sketch} className="summary-item">
-                  <Link to={`/product/${item.sketch}`} className="summary-item-link" style={{ display: 'flex', gap: '1rem', flex: 1, textDecoration: 'none', color: 'inherit' }}>
+                  <Link
+                    to={`/product/${item.sketch}`}
+                    className="summary-item-link"
+                    style={{
+                      display: "flex",
+                      gap: "1rem",
+                      flex: 1,
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
                     <img src={item.image} alt={item.title} />
                     <div style={{ flex: 1 }}>
-                      <p className="summary-item-title" style={{ transition: 'color 0.2s' }}>{item.title}</p>
+                      <p
+                        className="summary-item-title"
+                        style={{ transition: "color 0.2s" }}
+                      >
+                        {item.title}
+                      </p>
                       {item.includeFrame && (
                         <p className="summary-item-frame">
                           + {item.frameType} Frame (₹{item.framePrice})
@@ -296,9 +470,19 @@ const Checkout = () => {
                       )}
                     </div>
                   </Link>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      gap: "0.5rem",
+                    }}
+                  >
                     <span className="summary-item-price">
-                      ₹{(item.price + (item.includeFrame ? item.framePrice : 0)).toFixed(2)}
+                      ₹
+                      {(
+                        item.price + (item.includeFrame ? item.framePrice : 0)
+                      ).toFixed(2)}
                     </span>
                     <button
                       type="button"

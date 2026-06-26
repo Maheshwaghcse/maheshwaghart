@@ -745,9 +745,12 @@ const Home = () => {
                     />
                   </div>
                   <div className="gallery-info">
-                    <h3 className="gallery-title">
-                      {sketch.title}
-                    </h3>
+                    <span className="gallery-category">{sketch.category}</span>
+                    <h3 className="gallery-title">{sketch.title}</h3>
+                    <div className="gallery-footer">
+                      <span className="gallery-price">₹{sketch.price}</span>
+                      <span className="gallery-view-text">VIEW ARTWORK</span>
+                    </div>
                   </div>
                 </Link>
               ))
@@ -828,7 +831,14 @@ const Home = () => {
                             />
                           </div>
                           <div className="portfolio-info">
+                            <span className="portfolio-category">{sketch.category}</span>
                             <h3>{sketch.title}</h3>
+                            <div className="portfolio-meta">
+                              <span className="portfolio-medium">{sketch.medium}</span>
+                              <span className="portfolio-divider">|</span>
+                              <span className="portfolio-price">₹{sketch.price}</span>
+                            </div>
+                            <span className="portfolio-link-text">VIEW MASTERPIECE</span>
                           </div>
                         </Link>
                       </SwiperSlide>
@@ -2232,6 +2242,65 @@ const Home = () => {
           font-weight: 600;
         }
 
+        .gallery-category {
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          color: var(--primary);
+          margin-bottom: 0.4rem;
+          display: inline-block;
+        }
+        
+        .gallery-price {
+          font-family: 'Manrope', sans-serif;
+          font-weight: 800;
+          font-size: 1.1rem;
+          color: #ff8c00;
+        }
+        
+        .gallery-footer {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 0.75rem;
+          padding-top: 0.75rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .portfolio-category {
+          font-family: 'Manrope', sans-serif;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          color: var(--primary);
+          margin-bottom: 0.5rem;
+          display: block;
+        }
+        
+        .portfolio-meta {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 0.75rem;
+          margin: 0.5rem 0 1rem 0;
+          color: var(--outline);
+          font-size: 0.85rem;
+          font-family: 'Manrope', sans-serif;
+        }
+        
+        .portfolio-divider {
+          opacity: 0.3;
+        }
+        
+        .portfolio-price {
+          font-weight: 700;
+          color: #ff8c00;
+        }
+
         .portfolioSwiper .swiper-button-next,
         .portfolioSwiper .swiper-button-prev {
           color: #fff;
@@ -2241,6 +2310,197 @@ const Home = () => {
           height: 50px;
           border-radius: 50%;
           border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (min-width: 1025px) {
+          /* ─── Premium Featured Works Cards (Laptop) ─── */
+          .featured-section .gallery-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+          }
+          
+          .featured-section .gallery-item {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 1.25rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+          }
+          
+          .featured-section .gallery-item:hover {
+            background: linear-gradient(135deg, rgba(189, 0, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-color: rgba(189, 0, 255, 0.25);
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(189, 0, 255, 0.15);
+          }
+          
+          .featured-section .gallery-img-wrapper {
+            border-radius: 12px;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+          }
+          
+          .featured-section .gallery-item:hover .gallery-img-wrapper {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            transform: translateY(0); /* Disable wrapper translate, since card itself translates */
+          }
+          
+          .featured-section .gallery-item img {
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+          }
+          
+          .featured-section .gallery-item:hover img {
+            transform: scale(1.06);
+          }
+          
+          .featured-section .gallery-info {
+            padding: 0 0.25rem;
+            width: 100%;
+          }
+          
+          .featured-section .gallery-title {
+            font-size: 1.35rem;
+            font-weight: 500;
+            color: #ffffff;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+          }
+          
+          .featured-section .gallery-category {
+            color: rgba(189, 0, 255, 0.8);
+            font-size: 0.72rem;
+            margin-bottom: 0.35rem;
+          }
+          
+          .featured-section .gallery-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 1rem;
+            padding-top: 0.85rem;
+          }
+
+          /* ─── Premium Portfolio Section (Laptop) ─── */
+          .portfolioSwiper {
+            padding-top: 3rem;
+            padding-bottom: 5rem;
+          }
+          
+          /* Spotlight: Recede and blur non-active slides */
+          .portfolioSwiper .swiper-slide:not(.swiper-slide-active) {
+            filter: blur(3px) grayscale(40%) opacity(0.35);
+            pointer-events: none;
+            transition: all 0.6s ease;
+          }
+          
+          .portfolioSwiper .swiper-slide-active {
+            filter: blur(0) grayscale(0) opacity(1);
+            transition: all 0.6s ease;
+          }
+          
+          /* active portfolio card style */
+          .portfolioSwiper .swiper-slide-active .portfolio-card {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(189, 0, 255, 0.15);
+            border-radius: 16px;
+            padding: 1.25rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(189, 0, 255, 0.15);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+          }
+          
+          .portfolioSwiper .swiper-slide-active .portfolio-img-container {
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            transition: all 0.6s ease;
+            position: relative;
+            overflow: hidden;
+          }
+          
+          /* Luxury glossy glass reflection diagonal shine sweep */
+          .portfolioSwiper .swiper-slide-active .portfolio-img-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+              to right,
+              rgba(255, 255, 255, 0) 0%,
+              rgba(255, 255, 255, 0.15) 30%,
+              rgba(255, 255, 255, 0.3) 50%,
+              rgba(255, 255, 255, 0.15) 70%,
+              rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            z-index: 2;
+            pointer-events: none;
+            transition: none;
+          }
+          
+          .portfolioSwiper .swiper-slide-active .portfolio-card:hover .portfolio-img-container::before {
+            animation: shineSweep 1.5s ease-in-out;
+          }
+          
+          .portfolioSwiper .swiper-slide-active .portfolio-card:hover {
+            border-color: rgba(189, 0, 255, 0.45);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.8), 0 0 45px rgba(189, 0, 255, 0.3);
+            transform: scale(1.07) translateY(-5px);
+          }
+          
+          /* Only active slides display text information on desktop */
+          .portfolioSwiper .swiper-slide:not(.swiper-slide-active) .portfolio-info {
+            opacity: 0 !important;
+            transform: translateY(20px);
+            pointer-events: none;
+          }
+          
+          .portfolioSwiper .swiper-slide-active .portfolio-info {
+            opacity: 1;
+            transform: translateY(0);
+            padding: 1.25rem 0 0 0;
+            text-align: center;
+          }
+          
+          .portfolioSwiper .swiper-slide-active .portfolio-info h3 {
+            font-size: 1.6rem;
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+          }
+          
+          /* Glowing Swiper Buttons */
+          .portfolioSwiper .swiper-button-next,
+          .portfolioSwiper .swiper-button-prev {
+            color: #fff;
+            background: rgba(189, 0, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(189, 0, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            width: 55px;
+            height: 55px;
+          }
+          
+          .portfolioSwiper .swiper-button-next:hover,
+          .portfolioSwiper .swiper-button-prev:hover {
+            background: rgba(189, 0, 255, 0.2);
+            border-color: rgba(189, 0, 255, 0.7);
+            box-shadow: 0 0 20px rgba(189, 0, 255, 0.5);
+            transform: scale(1.1);
+          }
+        }
+        
+        @keyframes shineSweep {
+          0% { left: -150%; }
+          50% { left: 150%; }
+          100% { left: 150%; }
         }
 
         /* ─── Instagram Section ─── */
