@@ -745,12 +745,7 @@ const Home = () => {
                     />
                   </div>
                   <div className="gallery-info">
-                    <span className="gallery-category">{sketch.category}</span>
                     <h3 className="gallery-title">{sketch.title}</h3>
-                    <div className="gallery-footer">
-                      <span className="gallery-price">₹{sketch.price}</span>
-                      <span className="gallery-view-text">VIEW ARTWORK</span>
-                    </div>
                   </div>
                 </Link>
               ))
@@ -831,14 +826,7 @@ const Home = () => {
                             />
                           </div>
                           <div className="portfolio-info">
-                            <span className="portfolio-category">{sketch.category}</span>
-                            <h3>{sketch.title}</h3>
-                            <div className="portfolio-meta">
-                              <span className="portfolio-medium">{sketch.medium}</span>
-                              <span className="portfolio-divider">|</span>
-                              <span className="portfolio-price">₹{sketch.price}</span>
-                            </div>
-                            <span className="portfolio-link-text">VIEW MASTERPIECE</span>
+                            <h3>{sketch.tagline || sketch.title}</h3>
                           </div>
                         </Link>
                       </SwiperSlide>
@@ -1763,6 +1751,11 @@ const Home = () => {
           }
           .gallery-item {
             border-radius: 0.75rem;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            will-change: transform;
+            transition: transform 0.3s ease;
           }
           /* ── FEATURED WORKS cards mobile styling ── */
           .gallery-item:hover {
@@ -1771,6 +1764,9 @@ const Home = () => {
           .gallery-img-wrapper {
             margin-bottom: 0.5rem;
             border-radius: 0.4rem;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
           }
           .gallery-info {
             padding: 0 0.25rem;
@@ -1783,11 +1779,8 @@ const Home = () => {
             line-height: 1.2;
             word-wrap: break-word;
           }
-          .gallery-category {
-            display: none;
-          }
-          .gallery-price {
-            display: none;
+          .gallery-category, .gallery-price, .gallery-footer {
+            display: none !important;
           }
           .hero-stats { flex-direction: column; gap: 1rem; border-radius: 1.5rem; padding: 1.5rem 2rem; }
           .stat-divider { display: none; }
@@ -2177,13 +2170,16 @@ const Home = () => {
           background: transparent;
           border-radius: 0;
           overflow: visible;
-          transform: scale(0.9);
+          transform: scale(0.9) translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+          will-change: transform;
           transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
           text-decoration: none;
         }
         
         .portfolioSwiper .swiper-slide-active .portfolio-card {
-          transform: scale(1);
+          transform: scale(1) translate3d(0, 0, 0);
         }
         
         .portfolio-img-container {
@@ -2194,6 +2190,10 @@ const Home = () => {
           border-radius: 8px;
           box-shadow: 0 10px 30px rgba(0,0,0,0.5);
           transition: box-shadow 0.5s ease;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+          will-change: transform;
         }
         
         .portfolioSwiper .swiper-slide-active .portfolio-img-container {
