@@ -1,9 +1,10 @@
-// Gallery.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Filter, Grid3x3, Grid, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import useTrackClick from '../hooks/useTrackClick';
 
 const Gallery = () => {
+  const trackClick = useTrackClick();
   const [sketches, setSketches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
@@ -129,7 +130,13 @@ const Gallery = () => {
         ) : filteredSketches.length > 0 ? (
           <div className={`gallery-grid ${viewMode}`}>
             {filteredSketches.map((sketch, index) => (
-              <Link to={`/product/${sketch._id}`} key={sketch._id} className="gallery-card" style={{ animationDelay: `${index * 0.05}s` }}>
+              <Link 
+                to={`/product/${sketch._id}`} 
+                key={sketch._id} 
+                className="gallery-card" 
+                style={{ animationDelay: `${index * 0.05}s` }}
+                onClick={() => trackClick(`View Gallery Artwork - ${sketch.title}`)}
+              >
                 <div className="card-image-wrapper">
                   <img src={sketch.images[0]} alt={sketch.title} />
                   <div className="card-overlay">

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Plus, Trash2, LayoutDashboard, Image as ImageIcon, Layers, X, AlertCircle, Sparkles,
   Eye, Users, MousePointer, UserCheck, Activity, BarChart2, Mail, ChevronRight, Search, ExternalLink,
-  Clock
+  Clock, MessageCircle, Send, ShoppingCart, Zap
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -738,6 +738,191 @@ const AdminDashboard = () => {
                   </div>
 
                 </div>
+
+                {/* ── Key Conversion & Button Taps Summary ── */}
+                {(() => {
+                  const getTapCount = (pattern) => {
+                    if (!stats || !stats.clickCounts) return 0;
+                    return stats.clickCounts
+                      .filter(item => item.name && item.name.toLowerCase().includes(pattern.toLowerCase()))
+                      .reduce((acc, curr) => acc + curr.count, 0);
+                  };
+
+                  const customSendRequestCount = getTapCount('Send Request');
+                  const customWhatsappCount = getTapCount('Reach Out WhatsApp');
+                  const customEmailCount = getTapCount('Reach Out Email');
+                  const buyNowCount = getTapCount('Buy Now');
+                  const placeOrderWhatsappCount = getTapCount('Place Order via WhatsApp');
+
+                  return (
+                    <div className="card" style={{ padding: '2rem' }}>
+                      <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Zap className="text-primary" />
+                        Key Intent & Conversion Button Taps
+                      </h3>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '1.25rem' }}>
+                        
+                        {/* Send Request */}
+                        <div style={{ background: 'rgba(168, 85, 247, 0.08)', border: '1px solid rgba(168, 85, 247, 0.25)', borderRadius: '1rem', padding: '1.25rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8rem', color: '#c084fc', fontWeight: 600 }}>Custom Sketch</span>
+                            <Send size={18} style={{ color: '#c084fc' }} />
+                          </div>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block' }}>Send Request Taps</span>
+                          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginTop: '0.25rem', color: '#fff' }}>{customSendRequestCount}</h2>
+                        </div>
+
+                        {/* WhatsApp Reach Out */}
+                        <div style={{ background: 'rgba(37, 211, 102, 0.08)', border: '1px solid rgba(37, 211, 102, 0.25)', borderRadius: '1rem', padding: '1.25rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8rem', color: '#25D366', fontWeight: 600 }}>Custom Sketch</span>
+                            <MessageCircle size={18} style={{ color: '#25D366' }} />
+                          </div>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block' }}>WhatsApp Direct Taps</span>
+                          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginTop: '0.25rem', color: '#fff' }}>{customWhatsappCount}</h2>
+                        </div>
+
+                        {/* Email Reach Out */}
+                        <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '1rem', padding: '1.25rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 600 }}>Custom Sketch</span>
+                            <Mail size={18} style={{ color: '#38bdf8' }} />
+                          </div>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block' }}>Email Direct Taps</span>
+                          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginTop: '0.25rem', color: '#fff' }}>{customEmailCount}</h2>
+                        </div>
+
+                        {/* Buy Now */}
+                        <div style={{ background: 'rgba(234, 179, 8, 0.08)', border: '1px solid rgba(234, 179, 8, 0.25)', borderRadius: '1rem', padding: '1.25rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8rem', color: '#eab308', fontWeight: 600 }}>Direct Purchase</span>
+                            <Zap size={18} style={{ color: '#eab308' }} />
+                          </div>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block' }}>Buy Now Taps</span>
+                          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginTop: '0.25rem', color: '#fff' }}>{buyNowCount}</h2>
+                        </div>
+
+                        {/* Place Order via WhatsApp */}
+                        <div style={{ background: 'rgba(34, 197, 94, 0.08)', border: '1px solid rgba(34, 197, 94, 0.25)', borderRadius: '1rem', padding: '1.25rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8rem', color: '#22c55e', fontWeight: 600 }}>Checkout</span>
+                            <MessageCircle size={18} style={{ color: '#22c55e' }} />
+                          </div>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block' }}>WhatsApp Order Taps</span>
+                          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginTop: '0.25rem', color: '#fff' }}>{placeOrderWhatsappCount}</h2>
+                        </div>
+
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* ── Artwork Taps by Sketch Title ── */}
+                {(() => {
+                  if (!stats || !stats.clickCounts) return null;
+
+                  // Aggregate taps by sketch title
+                  const sketchTapMap = {};
+                  stats.clickCounts.forEach(item => {
+                    const name = item.name || '';
+                    let sketchTitle = null;
+                    let actionType = 'Tap';
+
+                    if (name.includes('View Gallery Artwork - ')) {
+                      sketchTitle = name.replace('View Gallery Artwork - ', '');
+                      actionType = 'Gallery View';
+                    } else if (name.includes('View Featured Artwork - ')) {
+                      sketchTitle = name.replace('View Featured Artwork - ', '');
+                      actionType = 'Featured View';
+                    } else if (name.includes('View Portfolio Artwork - ')) {
+                      sketchTitle = name.replace('View Portfolio Artwork - ', '');
+                      actionType = 'Portfolio View';
+                    } else if (name.includes('Buy Now - ')) {
+                      sketchTitle = name.replace('Buy Now - ', '');
+                      actionType = 'Buy Now';
+                    } else if (name.includes('Add to Cart - ')) {
+                      sketchTitle = name.replace('Add to Cart - ', '');
+                      actionType = 'Add to Cart';
+                    }
+
+                    if (sketchTitle) {
+                      if (!sketchTapMap[sketchTitle]) {
+                        sketchTapMap[sketchTitle] = {
+                          title: sketchTitle,
+                          totalTaps: 0,
+                          views: 0,
+                          cartTaps: 0,
+                          buyNowTaps: 0
+                        };
+                      }
+                      sketchTapMap[sketchTitle].totalTaps += item.count;
+                      if (actionType.includes('View')) sketchTapMap[sketchTitle].views += item.count;
+                      if (actionType === 'Add to Cart') sketchTapMap[sketchTitle].cartTaps += item.count;
+                      if (actionType === 'Buy Now') sketchTapMap[sketchTitle].buyNowTaps += item.count;
+                    }
+                  });
+
+                  const sketchTapList = Object.values(sketchTapMap).sort((a, b) => b.totalTaps - a.totalTaps);
+
+                  return (
+                    <div className="card" style={{ padding: '2rem' }}>
+                      <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <ImageIcon className="text-primary" />
+                        Artwork Taps by Sketch Title
+                      </h3>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+                        Tracks every artwork user interactions (Views, Add to Cart, Buy Now) by their specific sketch title.
+                      </p>
+
+                      {sketchTapList.length === 0 ? (
+                        <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', borderRadius: '1rem', border: '1px dashed rgba(255,255,255,0.05)' }}>
+                          No specific sketch title taps recorded yet for this time range.
+                        </div>
+                      ) : (
+                        <div style={{ overflowX: 'auto' }}>
+                          <table className="analytics-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                              <tr style={{ borderBottom: '2px solid rgba(255,255,255,0.05)', textAlign: 'left' }}>
+                                <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Sketch Title</th>
+                                <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center' }}>Page Views</th>
+                                <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center' }}>Add to Cart</th>
+                                <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center' }}>Buy Now</th>
+                                <th style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'right' }}>Total Taps</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {sketchTapList.map((item, idx) => (
+                                <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                  <td style={{ padding: '1rem', fontWeight: 600, fontSize: '0.95rem', color: '#fff' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                      <span style={{
+                                        width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(189,0,255,0.15)',
+                                        color: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        fontSize: '0.75rem', fontWeight: 700
+                                      }}>{idx + 1}</span>
+                                      {item.title}
+                                    </div>
+                                  </td>
+                                  <td style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>{item.views}</td>
+                                  <td style={{ padding: '1rem', textAlign: 'center', color: '#38bdf8', fontSize: '0.9rem', fontWeight: item.cartTaps > 0 ? 700 : 400 }}>{item.cartTaps}</td>
+                                  <td style={{ padding: '1rem', textAlign: 'center', color: '#eab308', fontSize: '0.9rem', fontWeight: item.buyNowTaps > 0 ? 700 : 400 }}>{item.buyNowTaps}</td>
+                                  <td style={{ padding: '1rem', textAlign: 'right' }}>
+                                    <span style={{
+                                      background: 'rgba(189,0,255,0.15)', color: 'var(--primary-color)',
+                                      padding: '0.3rem 0.75rem', borderRadius: '20px', fontSize: '0.9rem', fontWeight: 800
+                                    }}>
+                                      {item.totalTaps} taps
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {/* ── Charts Section ── */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>

@@ -15,8 +15,10 @@ import {
 } from "lucide-react";
 import { CartContext } from "../context/CartContext";
 import { AuthContext } from "../context/AuthContext";
+import useTrackClick from "../hooks/useTrackClick";
 
 const Checkout = () => {
+  const trackClick = useTrackClick();
   const { cartItems, clearCart, getCartTotal, removeFromCart } =
     useContext(CartContext);
   const { userInfo } = useContext(AuthContext);
@@ -153,6 +155,7 @@ const Checkout = () => {
 
       setOrderId(data.order?._id || "ORD-" + Date.now());
       setOrderPlaced(true);
+      trackClick('Place Order via WhatsApp');
       clearCart();
 
       // Save shipping details to localStorage for future auto-fill

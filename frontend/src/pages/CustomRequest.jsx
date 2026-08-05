@@ -1,8 +1,9 @@
-// CustomRequest.jsx
 import React, { useState } from 'react';
 import { Send, MessageCircle, Mail, Sparkles, Upload, Zap, X } from 'lucide-react';
+import useTrackClick from '../hooks/useTrackClick';
 
 const CustomRequest = () => {
+  const trackClick = useTrackClick();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -112,6 +113,7 @@ const CustomRequest = () => {
       }
 
       setSubmitted(true);
+      trackClick('Custom Sketch - Send Request');
       setFormData({
         name: '',
         email: '',
@@ -259,10 +261,20 @@ const CustomRequest = () => {
             <div className="direct-contact">
               <p>Or reach out directly:</p>
               <div className="contact-buttons">
-                <a href="https://wa.me/917387062073?text=Hi! I'd like to commission a custom sketch." target="_blank" rel="noopener noreferrer" className="whatsapp-btn">
+                <a 
+                  href="https://wa.me/917387062073?text=Hi! I'd like to commission a custom sketch." 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="whatsapp-btn"
+                  onClick={() => trackClick('Custom Sketch - Reach Out WhatsApp')}
+                >
                   <MessageCircle size={20} /> WhatsApp
                 </a>
-                <a href="mailto:maheshwaghart@gmail.com?subject=Custom Sketch Commission" className="email-btn">
+                <a 
+                  href="mailto:maheshwaghart@gmail.com?subject=Custom Sketch Commission" 
+                  className="email-btn"
+                  onClick={() => trackClick('Custom Sketch - Reach Out Email')}
+                >
                   <Mail size={20} /> Email
                 </a>
               </div>

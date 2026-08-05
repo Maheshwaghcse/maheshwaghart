@@ -38,7 +38,7 @@ const ProductDetail = () => {
   const derivedFramePrice = derivedFrameType.includes('A3') ? 600 : derivedFrameType.includes('A4') ? 400 : 400;
 
   const handleAddToCart = () => {
-    trackClick('Add to Cart');
+    trackClick(`Add to Cart - ${sketch?.title || 'Sketch'}`);
     addToCart({
       sketch: sketch._id,
       title: sketch.title,
@@ -62,7 +62,7 @@ const ProductDetail = () => {
   };
 
   const handleBuyNow = () => {
-    trackClick('Buy Now');
+    trackClick(`Buy Now - ${sketch?.title || 'Sketch'}`);
     addToCart({
       sketch: sketch._id,
       title: sketch.title,
